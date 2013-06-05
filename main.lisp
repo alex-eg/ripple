@@ -7,22 +7,23 @@
        (progn ,@body)
      (continue () :report "Continue"  )))
 
-(defvar *a* 0.5)
-
-(defun draw ()
-  "draw a frame"
-  (gl:clear :color-buffer-bit)
-  ;; draw a triangle
-  (setf *a* pi)
-  (gl:rotate *a* 0 1 0)
-  (gl:push-matrix)
-  (gl:with-primitive :triangles
+(defun draw-triangle ()
+    (gl:with-primitive :triangles
     (gl:color 1 1 1)
     (gl:vertex 0 0 0)
     (gl:color 0 1 0)
     (gl:vertex 0.5 1 0)
     (gl:color 0 0 1)
-    (gl:vertex 1 0 0))
+    (gl:vertex 1 0 0)))
+    
+
+(defun draw ()
+  "draw a frame"
+  (gl:clear :color-buffer-bit)
+  ;; draw a triangle
+  (gl:rotate pi 1 1 0)
+  (gl:push-matrix)
+  (draw-triangle)
   (gl:pop-matrix)
   ;; finish the frame
   (gl:flush)
