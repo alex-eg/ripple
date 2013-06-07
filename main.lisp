@@ -9,21 +9,33 @@
 
 (defun draw-triangle ()
     (gl:with-primitive :triangles
-    (gl:color 1 1 1)
-    (gl:vertex 0 0 0)
-    (gl:color 0 1 0)
-    (gl:vertex 0.5 1 0)
-    (gl:color 0 0 1)
-    (gl:vertex 1 0 0)))
+      (gl:color 1 1 1)
+      (gl:vertex 0 0 0)
+      (gl:color 0 1 0)
+      (gl:vertex 0.5 1 0)
+      (gl:color 0 0 1)
+      (gl:vertex 1 0 0)))
     
+(defun draw-grid (width length stride)
+  (loop for i from 0 to width by stride do
+       (gl:with-primitive :line-strip
+	 (loop for j from 0 to length by stride do    
+	      (gl:color 1 1 1)
+	      (gl:vertex i j 0))))
+  (loop for j from 0 to length by stride do    
+       (gl:with-primitive :line-strip
+	 (loop for i from 0 to width by stride do
+	      (gl:color 1 1 1)
+	      (gl:vertex i j 0)))))
 
 (defun draw ()
   "draw a frame"
   (gl:clear :color-buffer-bit)
   ;; draw a triangle
-  (gl:rotate pi 1 1 0)
+;;  (gl:rotate pi 1 1 0)
   (gl:push-matrix)
-  (draw-triangle)
+;;  (draw-triangle)
+  (draw-grid 3 3 0.1)
   (gl:pop-matrix)
   ;; finish the frame
   (gl:flush)
@@ -31,10 +43,11 @@
 
 (defun main-loop ()
   (sdl:with-init ()
-    (sdl:window 320 240 :flags sdl:sdl-opengl)
+    (sdl:window 640 480 :flags sdl:sdl-opengl)
     ;; cl-opengl needs platform specific support to be able to load GL
     ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
-    (setf cl-opengl-bindings:*gl-get-proc-address* #'sdl-cffi::sdl-gl-get-proc-address)
+    (setf cl-opengl-bindings:*gl-get-proc-address* 
+	  #'sdl-cffi::sdl-gl-get-proc-address)
     (sdl:with-events ()
       (:quit-event () t)
       (:idle ()
