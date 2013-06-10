@@ -28,6 +28,7 @@
 	     vec))))
 		   	
 (defun cross (a b)
+  "Computes cross product of two vectors"
   (let ((a-x (x a))
 	(a-y (y a))
 	(a-z (z a))
