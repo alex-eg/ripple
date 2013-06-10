@@ -8,5 +8,7 @@
 (defsystem :ripple
   :serial t
   :components ((:file "packages")
+	       (:file "camera")
+	       (:file "helpers")
 	       (:file "main"))
   :depends-on (:cl-opengl :lispbuilder-sdl))
