@@ -61,7 +61,7 @@
 			    center
 			    eye)))
 	 (u (v:normalize up))
-	 (s (v:normalize (cross f u)))
+	 (s (v:normalize (v:cross f u)))
 	 (real-u (v:cross s f))
 
 	 (eye-x (v:x eye))
