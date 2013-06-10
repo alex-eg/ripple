@@ -20,22 +20,29 @@
   (loop for i from 0 to width by stride do
        (gl:with-primitive :line-strip
 	 (loop for j from 0 to length by stride do    
-	      (gl:color 1 1 1)
+	      (gl:color 0.5 1 0.5)
 	      (gl:vertex i j 0))))
   (loop for j from 0 to length by stride do    
        (gl:with-primitive :line-strip
 	 (loop for i from 0 to width by stride do
-	      (gl:color 1 1 1)
+	      (gl:color 0.5 1 0.5)
 	      (gl:vertex i j 0)))))
+
+(defvar *cam* (make-instance 'camera:camera))
 
 (defun draw ()
   "draw a frame"
   (gl:clear :color-buffer-bit)
+  (gl:matrix-mode :projection)
+  (gl:load-identity)
+  (gl:matrix-mode :modelview)
+  (gl:load-identity)
+;  (camera:update-matrices *cam*)
   ;; draw a triangle
 ;;  (gl:rotate pi 1 1 0)
   (gl:push-matrix)
 ;;  (draw-triangle)
-  (draw-grid 3 3 0.1)
+  (draw-grid 3 3 0.3)
   (gl:pop-matrix)
   ;; finish the frame
   (gl:flush)
@@ -48,6 +55,7 @@
     ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
     (setf cl-opengl-bindings:*gl-get-proc-address* 
 	  #'sdl-cffi::sdl-gl-get-proc-address)
+    
     (sdl:with-events ()
       (:quit-event () t)
       (:idle ()
