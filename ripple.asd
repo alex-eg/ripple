@@ -9,6 +9,7 @@
   :serial t
   :components ((:file "packages")
 	       (:file "camera")
+	       (:file "vector")
 	       (:file "helpers")
 	       (:file "main"))
   :depends-on (:cl-opengl :lispbuilder-sdl))

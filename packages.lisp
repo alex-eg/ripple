@@ -3,6 +3,12 @@
 (defpackage :ripple
   (:use :cl :cl-opengl))
 
+(defpackage :v
+  (:use :cl)
+  (:export :x
+	   :y
+	   :z))
+
 (defpackage :helpers
   (:use :cl)
   (:export :radians
