@@ -10,6 +10,7 @@
   :components ((:file "packages")
 	       (:file "camera")
 	       (:file "vector")
+	       (:file "matrix")
 	       (:file "helpers")
 	       (:file "main"))
   :depends-on (:cl-opengl :lispbuilder-sdl))

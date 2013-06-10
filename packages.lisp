@@ -4,16 +4,23 @@
   (:use :cl :cl-opengl))
 
 (defpackage :v
-  (:use :cl)
+  (:use :cl :helpers)
   (:export :x
 	   :y
-	   :z))
+	   :z
+	   :normalize
+	   :cross
+	   :mag))
+
+(defpackage :m
+  (:use :cl :helpers)
+  (:export :translate
+	   :rotate
+	   :scale))
 
 (defpackage :helpers
   (:use :cl)
-  (:export :radians
-	   :normalize
-	   :cross))
+  (:export :radians))
 
 (defpackage :camera
   (:use :cl :helpers)
