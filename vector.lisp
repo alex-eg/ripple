@@ -9,6 +9,19 @@
 (defun z (v)
   (aref v 2))
 
+(defun add (v1 v2)
+  "Sums two vectors"
+  (make-array (length v1)
+	      :initial-contents
+	      (list (+ (x v1) (x v2))
+		    (+ (y v1) (y v2))
+		    (+ (z v1) (z v2)))))
+
+(defun mul-num (vect num)
+  (vector (* num (x vect))
+	  (* num (y vect))
+	  (* num (z vect))))
+
 (defun mag (vec)
   "Returns vector magnitude"
   (sqrt 
