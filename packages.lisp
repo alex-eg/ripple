@@ -3,6 +3,10 @@
 (defpackage :ripple
   (:use :cl :cl-opengl))
 
+(defpackage :helpers
+  (:use :cl)
+  (:export :radians))
+
 (defpackage :v
   (:use :cl :helpers)
   (:export :x
@@ -17,10 +21,6 @@
   (:export :translate
 	   :rotate
 	   :scale))
-
-(defpackage :helpers
-  (:use :cl)
-  (:export :radians))
 
 (defpackage :camera
   (:use :cl :helpers)
