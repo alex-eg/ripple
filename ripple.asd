@@ -13,4 +13,6 @@
 	       (:file "matrix")
 	       (:file "helpers")
 	       (:file "main"))
-  :depends-on (:cl-opengl :lispbuilder-sdl))
+  :depends-on (:cl-opengl
+	       :lispbuilder-sdl 
+	       :cl-glu))
