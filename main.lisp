@@ -22,12 +22,12 @@
 	 (gl:with-primitive :line-strip
 	   (loop for j from 0 to length by stride do    
 		(gl:color 0.5 1 0.5)
-		(gl:vertex i (* (tan i) (cos j)) j))))
+		(gl:vertex i (* (sin i) (cos j)) j))))
     (loop for j from 0 to length by stride do    
 	 (gl:with-primitive :line-strip
 	   (loop for i from 0 to width by stride do
 		(gl:color 0.5 1 0.5)
-		(gl:vertex i (* (tan i) (cos j)) j))))))
+		(gl:vertex i (* (sin i) (cos j)) j))))))
 
 (defvar *cam*)
 (setf *cam* (make-instance 'camera:camera
@@ -62,14 +62,14 @@
       (:mouse-button-down-event 
        (:button b)
        
-       (cond ((= b 4) ; mouse wheel up
+       (cond ((= b sdl:mouse-wheel-up)
 	      (let* ((oldpos (camera:cam-position *cam*))
 		     (oldsight (camera:cam-sight *cam*))
 		     (oldview (v:normalize (v:sub oldsight oldpos)))
 
 		     (newpos (v:add oldview oldpos)))
 		(setf (camera:cam-position *cam*) newpos)))
-	     ((= b 5) ; mouse wheel down
+	     ((= b sdl:mouse-wheel-down)
 	      (let* ((oldpos (camera:cam-position *cam*))
 		     (oldsight (camera:cam-sight *cam*))
 		     (oldview (v:normalize (v:sub oldsight oldpos)))
@@ -78,11 +78,9 @@
 		(setf (camera:cam-position *cam*) newpos)))
 	     (t (format t "button ~A pressed~%" b))))
       
-      
-      
       (:mouse-motion-event 
        (:x-rel dx :y-rel dy)
-       
+
        (when (sdl:mouse-left-p)
 	 (let* ((oldpos (camera:cam-position *cam*))
 		(oldsight (camera:cam-sight *cam*))
