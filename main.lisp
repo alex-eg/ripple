@@ -44,7 +44,10 @@
   (camera:update-matrices *cam*)
   ;; draw a triangle
   ;;  (draw-triangle)
+  (gl:push-matrix)
+  (gl:rotate (/ pi 3.0) 0 1 0)
   (draw-grid 30 30 0.3)
+  (gl:pop-matrix)
   ;; finish the frame
   (gl:flush)
   (sdl:update-display))
