@@ -1,17 +1,17 @@
 (in-package :camera)
 
 (defclass camera ()
-  ((position 
-    :accessor cam-position
-    :initarg :position
+  ((eye
+    :accessor cam-eye
+    :initarg :eye
     :initform #(3 -3 3))
-   (upvec 
+   (up-vec 
     :accessor cam-up
     :initarg :up
     :initform #(0 -1 0))
    (sight 
-    :accessor cam-sight 
-    :initarg :sight
+    :accessor cam-center
+    :initarg :center
     :initform #(2 0 2))
    (field-of-view-y 
     :accessor cam-fovy
@@ -39,10 +39,18 @@
 		   (cam-zfar cam))
   (gl:matrix-mode :modelview)
   (gl:load-identity)
-  (let ((eye (cam-position cam))
-	(center (cam-sight cam))
+  (let ((eye (cam-eye cam))
+	(center (cam-center cam))
 	(up (cam-up cam)))
     (glu:look-at (v:x eye) (v:y eye) (v:z eye)
 		 (v:x center) (v:y center) (v:z center)
 		 (v:x up) (v:y up) (v:z up))))
 		 
+
+(defmacro with-old-parameters (cam &optional (old-eye old-center old-up old-view) &rest body)
+  "Sets environment with defined old-eye, old-center and old-up variables. It also sets the old-view vector as normalized subtraction of old-center and old-eye vectors"
+  `(let* ((,old-eye (camera:cam-eye ,cam))
+	 (,old-center (camera:cam-center ,cam))
+	 (,old-up (camera:cam-up ,cam))
+	 (,old-view (v:normalize (v:sub ,old-center ,old-eye))))
+     (progn ,@body)))

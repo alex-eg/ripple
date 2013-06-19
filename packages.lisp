@@ -5,7 +5,8 @@
 
 (defpackage :helpers
   (:use :cl)
-  (:export :radians))
+  (:export :radians
+	   :with-mouse-button))
 
 (defpackage :v
   (:use :cl :helpers)
@@ -28,10 +29,11 @@
 (defpackage :camera
   (:use :cl :helpers)
   (:export :camera
-	   :cam-position
+	   :cam-center
 	   :cam-up
 	   :cam-fovy
-	   :cam-sight
+	   :cam-eye
+	   :with-old-parameters
 	   :cam-aspect
 	   :cam-znear
 	   :cam-zfar

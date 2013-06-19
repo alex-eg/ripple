@@ -31,7 +31,7 @@
 
 (defvar *cam*)
 (setf *cam* (make-instance 'camera:camera
-			   :position #(0 -3 0)))
+			   :center #(0 -3 0)))
 
 
 (defun draw ()
@@ -66,37 +66,51 @@
        (:button b)
        
        (cond ((= b sdl:mouse-wheel-up)
-	      (let* ((oldpos (camera:cam-position *cam*))
-		     (oldsight (camera:cam-sight *cam*))
-		     (oldview (v:normalize (v:sub oldsight oldpos)))
-
-		     (newpos (v:add oldview oldpos)))
-		(setf (camera:cam-position *cam*) newpos)))
+	      (camera:with-old-parameters *cam* old-eye old-center
+					  old-view
+		(let ((newpos (v:add old-view old-eye)))
+		  (setf (camera:cam-eye *cam*) newpos))))
+		
 	     ((= b sdl:mouse-wheel-down)
-	      (let* ((oldpos (camera:cam-position *cam*))
-		     (oldsight (camera:cam-sight *cam*))
-		     (oldview (v:normalize (v:sub oldsight oldpos)))
+	      (camera:with-old-parameters *cam*
+		(let ((newpos (v:sub old-eye old-view)))
+		  (setf (camera:cam-eye *cam*) newpos))))
 
-		     (newpos (v:sub oldpos oldview)))
-		(setf (camera:cam-position *cam*) newpos)))
 	     (t (format t "button ~A pressed~%" b))))
       
       (:mouse-motion-event 
        (:x-rel dx :y-rel dy)
-
+       (when (sdl:mouse-right-p)
+	 (let* ((oldpos (camera:cam-eye *cam*))
+		(oldsight (camera:cam-center *cam*))
+		(oldview (v:normalize (v:sub oldsight oldpos)))
+		(strafe (v:normalize
+			 (v:cross (camera:cam-up *cam*) oldview)))
+		
+		(d-strafe (v:mul-num strafe (/ dx 10)))
+		(d-updown (v:mul-num (vector 0.0 1.0 0.0) (/ dy 10)))
+		(d-view (v:add d-strafe d-updown))
+		(newview (v:add oldview d-view))
+		(newsight (v:add oldpos newview))
+		(newup (v:normalize (v:cross newview strafe))))
+	   (setf (camera:cam-center *cam*) newsight)
+	   (setf (camera:cam-up *cam*) newup)))
+	   
        (when (sdl:mouse-left-p)
-	 (let* ((oldpos (camera:cam-position *cam*))
-		(oldsight (camera:cam-sight *cam*))
+	 (let* ((oldpos (camera:cam-eye *cam*))
+		(oldsight (camera:cam-center *cam*))
 		(oldview (v:normalize (v:sub oldsight oldpos)))
 		(olddir (vector (v:x oldview) 0.0 (v:z oldview)))
+
 		(strafe (v:cross (camera:cam-up *cam*) oldview))
 		(d-dir (v:add (v:mul-num olddir (/ dy 10))
 			      (v:mul-num strafe (/ dx 10))))
+
 		(newpos (v:add oldpos d-dir))
 		(newsight (v:add oldsight d-dir)))
 	   
-	   (setf (camera:cam-position *cam*) newpos)
-	   (setf (camera:cam-sight *cam*) newsight))))
+	   (setf (camera:cam-eye *cam*) newpos)
+	   (setf (camera:cam-center *cam*) newsight))))
       (:idle ()
              ;; this lets slime keep working while the main loop is running
              ;; in sbcl using the :fd-handler swank:*communication-style*
