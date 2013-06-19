@@ -54,7 +54,8 @@
 
 (defun main-loop ()
   (sdl:with-init ()
-    (sdl:window 800 600 :flags sdl:sdl-opengl)
+    (sdl:window 800 600 
+		:opengl :hw :double-buffer :resizable)
     ;; cl-opengl needs platform specific support to be able to load GL
     ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
     (setf cl-opengl-bindings:*gl-get-proc-address* 
