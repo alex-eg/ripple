@@ -31,7 +31,8 @@
 
 (defvar *cam*)
 (setf *cam* (make-instance 'camera:camera
-			   :eye #(0 -3 0)))
+			   :vertical-angle 0.0
+			   :eye #(0 0 0)))
 (defun draw ()
   "draw a frame"
   (gl:clear :color-buffer-bit)
@@ -80,22 +81,11 @@
       
       (:mouse-motion-event 
        (:x-rel dx :y-rel dy)
-       (when (sdl:mouse-right-p)
-	 (camera:with-old-parameters (*cam* :eye eye
-					    :center center
-					    :up up
-					    :view view)
-	   (let* ((strafe (v:normalize (v:cross up view)))
-		  (d-strafe (v:mul-num strafe (/ dx 10)))
-		  (d-updown (v:mul-num (vector 0.0 1.0 0.0) (/ dy 10)))
-		  (d-view (v:add d-strafe d-updown))
-		  (new-view (v:add view d-view))
-		  (new-center (v:add eye new-view))
-		  (new-up (v:normalize (v:cross new-view strafe))))
-	     (setf (camera:cam-center *cam*) new-center)
-	     (setf (camera:cam-up *cam*) new-up))))
+       (when (sdl:mouse-right-p) ;; rotate view
+	 (camera:rotate-yaw *cam* (/ dy 10.0))
+	 (camera:rotate-vertically *cam* (/ dx 10.0)))
        
-       (when (sdl:mouse-left-p)
+       (when (sdl:mouse-left-p) ;; move through the field
 	 (camera:with-old-parameters (*cam* :eye eye
 					    :center center
 					    :up up

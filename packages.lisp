@@ -8,7 +8,7 @@
   (:export :radians
 	   :with-mouse-button))
 
-(defpackage :v
+(defpackage :v ; vectors
   (:use :cl :helpers)
   (:export :x
 	   :y
@@ -20,7 +20,7 @@
 	   :cross
 	   :mag))
 
-(defpackage :m
+(defpackage :m ; matrices
   (:use :cl :helpers)
   (:export :translate
 	   :rotate
@@ -33,6 +33,8 @@
 	   :cam-up
 	   :cam-fovy
 	   :cam-eye
+	   :rotate-vertically
+	   :rotate-horizontally
 	   :with-old-parameters
 	   :cam-aspect
 	   :cam-znear
