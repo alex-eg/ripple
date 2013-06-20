@@ -47,10 +47,13 @@
 		 (v:x up) (v:y up) (v:z up))))
 		 
 
-(defmacro with-old-parameters (cam &optional (old-eye old-center old-up old-view) &rest body)
+(defmacro with-old-parameters ((cam &key eye center up view) &rest body)
   "Sets environment with defined old-eye, old-center and old-up variables. It also sets the old-view vector as normalized subtraction of old-center and old-eye vectors"
-  `(let* ((,old-eye (camera:cam-eye ,cam))
-	 (,old-center (camera:cam-center ,cam))
-	 (,old-up (camera:cam-up ,cam))
-	 (,old-view (v:normalize (v:sub ,old-center ,old-eye))))
-     (progn ,@body)))
+  (let ((binding-list (remove nil 
+			      (list `(,eye (camera:cam-eye ,cam))
+				    `(,center (camera:cam-center ,cam))
+				    `(,up (camera:cam-up ,cam))
+				    `(,view (v:normalize (v:sub ,center ,eye))))
+			      :key #'car)))
+    `(let* ,binding-list
+       (progn ,@body))))
