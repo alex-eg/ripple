@@ -68,7 +68,7 @@
 						 :view old-view)
       		(let ((newpos (v:add old-view old-eye)))
       		  (setf (camera:cam-eye *cam*) newpos))))
-		
+	     
       	     ((= b sdl:mouse-wheel-down)
       	      (camera:with-old-parameters (*cam* :eye old-eye 
 						 :center old-center
@@ -94,7 +94,7 @@
 		  (new-up (v:normalize (v:cross new-view strafe))))
 	     (setf (camera:cam-center *cam*) new-center)
 	     (setf (camera:cam-up *cam*) new-up))))
-	   
+       
        (when (sdl:mouse-left-p)
 	 (camera:with-old-parameters (*cam* :eye eye
 					    :center center
@@ -107,9 +107,9 @@
 
 		  (new-eye (v:add eye d-dir))
 		  (new-center (v:add center d-dir)))
-	   
-      	   (setf (camera:cam-eye *cam*) new-eye)
-      	   (setf (camera:cam-center *cam*) new-center)))))
+	     
+	     (setf (camera:cam-eye *cam*) new-eye)
+	     (setf (camera:cam-center *cam*) new-center)))))
       (:idle ()
              ;; this lets slime keep working while the main loop is running
              ;; in sbcl using the :fd-handler swank:*communication-style*
