@@ -5,8 +5,7 @@
 
 (defpackage :helpers
   (:use :cl)
-  (:export :radians
-	   :with-mouse-button))
+  (:export :radians))
 
 (defpackage :v ; vectors
   (:use :cl :helpers)
