@@ -5,3 +5,6 @@
 
 (defun rotate (matrix vector)
   )
+
+(defun scale (matrix size)
+  )
