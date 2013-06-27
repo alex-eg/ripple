@@ -1,8 +1,12 @@
 (in-package :m)
 
-(defvar *I* #2A((1.0 0.0 0.0)
+(defun identity-matrix ()
+  (make-array '(3 3)
+	      :element-type 'single-float
+	      :initial-contents
+	      '((1.0 0.0 0.0)
 		(0.0 1.0 0.0)
-		(0.0 0.0 1.0)))
+		(0.0 0.0 1.0))))
 
 (defmacro do-matrix (((i n) (j m)) &rest body)
   `(dotimes (,i ,n)
@@ -14,12 +18,12 @@
 	 (m (array-dimension matrix 1))
 	 (transposed-matrix (make-array `(,m ,n)
 					:element-type 'single-float)))
-    (do-matrix (i n) (j m)
-	       (setf (aref transposed-matrix j i)
-		     (aref matrix i j)))
+    (do-matrix ((i n) (j m))
+      (setf (aref transposed-matrix j i)
+	    (aref matrix i j)))
     transposed-matrix))
 
-(defun mult-matrix (left right)
+(defun *-mat-mat (left right)
   (let* ((l-rows (array-dimension left 0))
 	 (l-cols (array-dimension left 1))
 	 (r-rows (array-dimension right 0))
@@ -36,16 +40,16 @@
 		    (map 'vector #'list
 			 (matrix-row left i)
 			 (matrix-col right j))
-		    :initial-value 0))))
-  new))
+		    :initial-value 0)))
+    new))
 
 (defun *-mat-num (matrix number)
-  (let ((new-matrix *I*)
+  (let ((new-matrix (identity-matrix))
 	(n (array-dimension matrix 0))
 	(m (array-dimension matrix 1)))
     (do-matrix ((i n) (j m))
       (setf (aref new-matrix i j)
-	    (* number (aref matrix i j)))))
+	    (* number (aref matrix i j))))
   new-matrix))
 
 (defun +-mat (matrix &rest other-matrices)
@@ -58,7 +62,7 @@
 	       (do-matrix ((i n) (j m))
 		 (setf (aref new-matrix i j)
 		       (+ (aref left i j)
-			  (aref right i j)))))
+			  (aref right i j))))
 	     new-matrix)))
   (reduce #'add-matrix other-matrices 
 	  :initial-value matrix)))
@@ -69,7 +73,7 @@
 			 :initial-element 0.0)))
     (do-matrix ((i 3) (j 3))
       (setf (aref new i j)
-	    (aref mat-3 i j))))
+	    (aref mat-3 i j)))
   (setf (aref new 3 3) 1.0)
   new))
 
@@ -97,25 +101,24 @@
 
 (defun rotate (vector angle)
   "Creates rotation matrix."
-  (let* (
-	 (x (v:x vector))
+  (let* ((x (v:x vector))
 	 (y (v:y vector))
 	 (z (v:z vector))
 	 
-	 (first-component (*-mat-num *I* (cos angle)))
+	 (first-component (*-mat-num (identity-matrix) (cos angle)))
 	 (second-component-matrix (make-array '(3 3)
 					      :element-type 'single-float
 					      :initial-contents 
-					      2#A(((* x x) (* x y) (* x z))
-						  ((* x y) (* y y) (* y z))
-						  ((* x z) (* z y) (* z z)))))
+					      `((,(* x x) ,(* x y) ,(* x z))
+						(,(* x y) ,(* y y) ,(* y z))
+						(,(* x z) ,(* z y) ,(* z z)))))
 	 (second-component (*-mat-num second-component-matrix (- 1 (cos angle))))
 	 (third-component-matrix (make-array '(3 3)
 					     :element-type 'single-float
 					     :initial-contents
-					     2#A((0.0 (- z) y)
-						 (z 0.0 (- x))
-						 ((- y) x 0.0))))
+					     `((0.0 ,(- z) ,y)
+					       (,z 0.0 ,(- x))
+					       (,(- y) ,x 0.0))))
 	 (third-component (*-mat-num third-component-matrix (sin angle)))
 	 (rotate-matrix (+-mat first-component
 			       second-component
@@ -123,7 +126,7 @@
     rotate-matrix))
 
 (defun scale (vector)
-  (let ((scale-matrix *I*))
+  (let ((scale-matrix (identity-matrix)))
     (dotimes (i 3)
       (setf (aref scale-matrix i i)
 	    (aref vector i)))
