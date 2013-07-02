@@ -31,7 +31,6 @@
 
 (defvar *cam*)
 (setf *cam* (make-instance 'camera:camera
-			   :vertical-angle 0.0
 			   :eye #(0 0 0)))
 (defun draw ()
   "draw a frame"
@@ -41,6 +40,9 @@
   (gl:matrix-mode :modelview)
   (gl:load-identity)
   (camera:update-matrices *cam*)
+  (gl:translate 15 0.0 15)
+  (cl-glut:wire-sphere 30.0 32 32)
+  (gl:translate -15 0.0 -15)
   (draw-grid 30 30 0.3)
   ;; finish the frame
   (gl:flush)
@@ -52,6 +54,7 @@
 		:opengl :hw :double-buffer :resizable)
     ;; cl-opengl needs platform specific support to be able to load GL
     ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
+    (cl-glut:init)
     (setf cl-opengl-bindings:*gl-get-proc-address* 
 	  #'sdl-cffi::sdl-gl-get-proc-address)
     
@@ -59,29 +62,23 @@
       (:quit-event () t)
       (:mouse-button-down-event 
        (:button b)
-       
        (cond ((= b sdl:mouse-wheel-up)
       	      (camera:with-old-parameters (*cam* :eye old-eye 
-						 :center old-center
 						 :view old-view)
       		(let ((newpos (v:add old-view old-eye)))
       		  (setf (camera:cam-eye *cam*) newpos))))
 	     
       	     ((= b sdl:mouse-wheel-down)
       	      (camera:with-old-parameters (*cam* :eye old-eye 
-						 :center old-center
 						 :view old-view)
       		(let ((newpos (v:sub old-eye old-view)))
-      		  (setf (camera:cam-eye *cam*) newpos))))
-
-      	     (t (format t "button ~A pressed~%" b))))
+      		  (setf (camera:cam-eye *cam*) newpos))))))
       
       (:mouse-motion-event 
        (:x-rel dx :y-rel dy)
        (when (sdl:mouse-right-p) ;; rotate view
 	 (camera:rotate-yaw *cam* (/ dy 10.0))
 	 (camera:rotate-pitch *cam* (/ dx 10.0)))
-       
        (when (sdl:mouse-left-p) ;; move through the field
 	 (camera:with-old-parameters (*cam* :eye eye
 					    :center center
