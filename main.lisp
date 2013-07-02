@@ -41,9 +41,6 @@
   (gl:matrix-mode :modelview)
   (gl:load-identity)
   (camera:update-matrices *cam*)
-  ;; draw a triangle
-  ;;  (draw-triangle)
-  (gl:rotate (/ pi 3.0) 0 1 0)
   (draw-grid 30 30 0.3)
   ;; finish the frame
   (gl:flush)
