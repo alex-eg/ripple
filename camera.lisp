@@ -38,6 +38,11 @@
     :initarg :z-far
     :initform 99.0)))
 
+(defmethod cam-view ((cam camera))
+  (let ((eye (cam-eye cam))
+	(center (cam-center cam)))
+    (v:sub center eye)))
+
 (defmethod print-camera-parameters ((cam camera))
   (let ((c (cam-center cam))
 	(e (cam-eye cam))
@@ -48,31 +53,22 @@
 	    e c u va ha)))
 
 (defmethod update-vectors ((cam camera))
-  (let* ((ha (helpers:radians (cam-horizontal-angle cam)))
-	 (va (helpers:radians (cam-vertical-angle cam)))
-
-	 ; rotation about X axis
-	 (sx (sin va))
-	 (cx (cos va))
-	 ; rotation about Y axis
-	 (sy (sin ha))
-	 (cy (cos ha))
-	 ; rotation about Z axis is always 90 degrees
-	 ; so, cz = 0
-	 ; and sz = 1
-
-	 (view (vector (* cy sx)
-		       sy
-		       (* cy cx)))
-	 (up (vector (- cx)
-		     0.0
-		     (* (sin va) (cos ha))))
-	 (center (v:add view (cam-eye cam))))
-    
-    (setf (cam-up cam) up)
-    (setf (cam-center cam) center)))
+  (let* ((horizontal-angle (radians (cam-horizontal-angle cam)))
+	 (vertical-angle (radians (cam-vertical-angle cam)))
+	 (up (cam-up cam))
+	 (center (cam-center cam))
+	 (eye (cam-eye cam))
+	 (view (v:normalize (cam-view cam))))
+    (let ((rot-matrix (m:rotate #(0.0 1.0 0.0) vertical-angle)))
+      (setf (cam-center cam)
+	    (v:add eye
+		   (m:coerce-vector 
+		    (m:*-mat-mat
+		     (m:coerce-matrix view)
+		     rot-matrix)))))))
 		     
 (defmethod rotate-yaw ((cam camera) (f float))
+  "Rotates camera around #(0 1 0) vector (facing the sky)"
   (let ((ha (cam-horizontal-angle cam)))
     (if (and (>= ha 0.0)
 	     (<= ha 360.0))
