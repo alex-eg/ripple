@@ -23,17 +23,26 @@
   (:use :cl :helpers)
   (:export :translate
 	   :rotate
-	   :scale))
+	   :scale
+	   :identity-matrix
+	   :do-matrix
+	   :transpose
+	   :*-mat-mat
+	   :*-mat-num
+	   :+-mat
+	   :mat-4
+	   :matrix-row
+	   :matrix-col))
 
 (defpackage :camera
   (:use :cl :helpers)
   (:export :camera
+	   :cam-eye
 	   :cam-center
 	   :cam-up
 	   :cam-fovy
-	   :cam-eye
-	   :rotate-vertically
-	   :rotate-horizontally
+	   :rotate-yaw
+	   :rotate-pitch
 	   :with-old-parameters
 	   :cam-aspect
 	   :cam-znear
