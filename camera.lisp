@@ -21,14 +21,6 @@
     :accessor cam-aspect
     :initarg :aspect
     :initform 4/3)
-   (vertical-angle
-    :accessor cam-vertical-angle
-    :initarg :vertical-angle
-    :initform 0.0)
-   (horizontal-angle
-    :accessor cam-horizontal-angle
-    :initarg :horizontal-angle
-    :initform 0.0)
    (z-near-clip
     :accessor cam-znear
     :initarg :z-near
@@ -47,51 +39,23 @@
   (let ((c (cam-center cam))
 	(e (cam-eye cam))
 	(u (cam-up cam))
-	(va (cam-vertical-angle cam))
-	(ha (cam-horizontal-angle cam)))
-    (format t "Eye: ~A~%Center: ~A~%Up: ~A~%Vertical: ~A~%Horizontal: ~A~%"
-	    e c u va ha)))
+	(view (cam-view cam)))
+    (format t "Eye: ~A~%Center: ~A~%Up: ~A~%View: ~A~%"
+	    e c u view)))
 
-(defmethod update-vectors ((cam camera))
-  (let* ((horizontal-angle (radians (cam-horizontal-angle cam)))
-	 (vertical-angle (radians (cam-vertical-angle cam)))
-	 (up (cam-up cam))
-	 (center (cam-center cam))
-	 (eye (cam-eye cam))
-	 (view (v:normalize (cam-view cam))))
-    (let ((rot-matrix (m:rotate #(0.0 1.0 0.0) vertical-angle)))
-      (setf (cam-center cam)
-	    (v:add eye
-		   (m:coerce-vector 
-		    (m:*-mat-mat
-		     (m:coerce-matrix view)
-		     rot-matrix)))))))
-		     
 (defmethod rotate-yaw ((cam camera) (f float))
-  "Rotates camera around #(0 1 0) vector (facing the sky)"
-  (let ((ha (cam-horizontal-angle cam)))
-    (if (and (>= ha 0.0)
-	     (<= ha 360.0))
-	(setf (cam-horizontal-angle cam)
-	      (+ ha f))))
-  (let ((ha (cam-horizontal-angle cam)))
-    (cond ((> ha 360.0) (setf (cam-horizontal-angle cam) (- ha 360.0)))
-	  ((< ha 0.0) (setf (cam-horizontal-angle cam) (+ 360.0 ha)))
-	  (t nil)))
-  (update-vectors cam))
+  (let* ((eye (cam-eye cam))
+	 (view (v:normalize (cam-view cam)))
+	 (rot-matrix (m:rotate #(0.0 1.0 0.0) f))
+	 (new-eye (v:add eye
+			 (m:coerce-vector 
+			  (m:*-mat-mat	
+			   (m:coerce-matrix view)
+			   rot-matrix)))))
+      (setf (cam-center cam) new-eye)))
 
 (defmethod rotate-pitch ((cam camera) (f float))
-  (let ((va (cam-vertical-angle cam)))
-    (if (and (<= va 180.0)
-	     (>= va 0.0))
-	(setf (cam-vertical-angle cam)
-	      (+ va f))))
-  (let ((va (cam-vertical-angle cam)))
-    (cond ((> va 180.0) (setf (cam-vertical-angle cam) 180.0))
-	  ((< va 0.0) (setf (cam-vertical-angle cam) 0.0))
-	  (t nil)))
-  (update-vectors cam))
-      
+  'foo)
 
 (defun update-matrices (cam)
   (gl:matrix-mode :projection)
@@ -116,7 +80,7 @@
 			      (list `(,eye (camera:cam-eye ,cam))
 				    `(,center (camera:cam-center ,cam))
 				    `(,up (camera:cam-up ,cam))
-				    `(,view (v:normalize (v:sub ,center ,eye))))
+				    `(,view (camera:cam-view ,cam)))
 			      :key #'car)))
     `(let* ,binding-list
        (progn ,@body))))
