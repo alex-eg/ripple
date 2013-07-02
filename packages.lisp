@@ -32,6 +32,8 @@
 	   :+-mat
 	   :mat-4
 	   :matrix-row
+	   :coerce-matrix
+	   :coerce-vector
 	   :matrix-col))
 
 (defpackage :camera
@@ -41,6 +43,7 @@
 	   :cam-center
 	   :cam-up
 	   :cam-fovy
+	   :cam-view
 	   :rotate-yaw
 	   :rotate-pitch
 	   :with-old-parameters
