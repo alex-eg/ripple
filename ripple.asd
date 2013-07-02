@@ -6,7 +6,6 @@
 (in-package :ripple-asd)
 
 (defsystem :ripple
-  :serial t
   :components ((:file "packages")
 	       (:file "camera")
 	       (:file "vector")
@@ -15,5 +14,4 @@
 	       (:file "main"))
   :depends-on (:cl-opengl
 	       :lispbuilder-sdl 
-	       :cl-glut
 	       :cl-glu))
