@@ -8,12 +8,31 @@
 		(0.0 1.0 0.0)
 		(0.0 0.0 1.0))))
 
+(defun coerce-matrix (vector)
+  (let ((new-matrix (make-array `(1 ,(length vector)))))
+    (dotimes (i (length vector))
+      (setf (aref new-matrix 0 i) (aref vector i)))
+    new-matrix))
+
+(defun coerce-vector (matrix)
+  (assert (= 1 (array-dimension matrix 0))
+	  nil
+	  "Matrix is not in a vector form")
+  (let ((new-vector (make-array (array-dimension matrix 1))))
+    (dotimes (i (array-dimension matrix 1))
+      (setf (aref new-vector i)
+	    (aref matrix 0 i)))
+    new-vector))
+
 (defmacro do-matrix (((i n) (j m)) &rest body)
   `(dotimes (,i ,n)
      (dotimes (,j ,m)
        (progn ,@body))))
 
 (defun transpose (matrix)
+  "Transposes argument matrix. If argument is of type vector, first coerces argumnet to matrix"
+  (if (vectorp matrix)
+      (transpose (coerce-matrix matrix)))
   (let* ((n (array-dimension matrix 0))
 	 (m (array-dimension matrix 1))
 	 (transposed-matrix (make-array `(,m ,n)
@@ -24,6 +43,9 @@
     transposed-matrix))
 
 (defun *-mat-mat (left right)
+  "Multiplies matrices. If one of the arguments is of type vector, it first coerced to matrix form"
+  (cond ((vectorp left) (*-mat-mat (coerce-matrix left) right))
+	((vectorp right) (*-mat-mat left (coerce-matrix right))))
   (let* ((l-rows (array-dimension left 0))
 	 (l-cols (array-dimension left 1))
 	 (r-rows (array-dimension right 0))
@@ -37,7 +59,7 @@
 	    (reduce (lambda (c elem)
 		      (+ c (* (car elem)
 			      (cadr elem))))
-		    (map 'vector #'list
+		    (map 'vector #'list ;;; suggestion: replace #'list with #'cons
 			 (matrix-row left i)
 			 (matrix-col right j))
 		    :initial-value 0)))
