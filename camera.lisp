@@ -46,7 +46,7 @@
 (defmethod rotate-yaw ((cam camera) (f float))
   (let* ((eye (cam-eye cam))
 	 (view (v:normalize (cam-view cam)))
-	 (rot-matrix (m:rotate #(0.0 1.0 0.0) f))
+	 (rot-matrix (m:rotate #(0.0 1.0 0.0) (helpers:radians f)))
 	 (new-eye (v:add eye
 			 (m:coerce-vector 
 			  (m:*-mat-mat	
