@@ -50,7 +50,7 @@
 
 (defun main-loop ()
   (sdl:with-init ()
-    (sdl:window 640 480 
+    (sdl:window 800 600
 		:opengl :hw :double-buffer :resizable)
     ;; cl-opengl needs platform specific support to be able to load GL
     ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
@@ -77,7 +77,7 @@
       (:mouse-motion-event 
        (:x-rel dx :y-rel dy)
        (when (sdl:mouse-right-p) ;; rotate view
-	 (camera:rotate-yaw *cam* (/ dx 10.0))
+	 ;;(camera:rotate-yaw *cam* (/ dx 10.0))
 	 (camera:rotate-pitch *cam* (/ dy 10.0)))
        (when (sdl:mouse-left-p) ;; move through the field
 	 (camera:with-old-parameters (*cam* :eye eye
