@@ -54,7 +54,6 @@
 	     (assert (= l-cols r-rows)
 		     (l-cols l-rows)
 		     "Matrix dimesions don't match: left has ~A cols and right has ~A rows" l-cols r-rows)
-	     (format t "l: rows ~A cols ~A~%r: rows ~A cols ~A~%" l-rows l-cols r-rows r-cols)
 	     (do-matrix ((i l-rows) (j r-cols))
 	       (setf (aref new i j)
 		     (reduce (lambda (c elem)
