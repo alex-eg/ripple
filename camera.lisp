@@ -46,7 +46,10 @@
 (defmethod rotate-yaw ((cam camera) (f float))
   (let* ((eye (cam-eye cam))
 	 (view (v:normalize (cam-view cam)))
-	 (rot-matrix (m:rotate #(0.0 1.0 0.0) (helpers:radians f)))
+	 (up (cam-up cam))
+
+	 (rot-matrix (m:rotate up (helpers:radians f)))
+
 	 (new-eye (v:add eye
 			 (m:coerce-vector 
 			  (m:*-mat-mat	
@@ -55,7 +58,25 @@
       (setf (cam-center cam) new-eye)))
 
 (defmethod rotate-pitch ((cam camera) (f float))
-  'foo)
+  (let* ((view (cam-view cam))
+	 (eye (cam-eye cam))
+	 (up (cam-up cam))
+	 (side (v:normalize (v:cross up view)))
+	 
+	 (rot-matrix (m:rotate side (helpers:radians f)))
+	 
+	 (new-center (v:add eye (m:coerce-vector
+				 (m:*-mat-mat
+				  (m:coerce-matrix view)
+				  rot-matrix))))
+	 (new-up (v:normalize 
+		  (m:coerce-vector
+		   (m:*-mat-mat
+		    (m:coerce-matrix up)
+		    rot-matrix)))))
+
+    (setf (cam-center cam) new-center)
+    (setf (cam-up cam) new-up)))
 
 (defun update-matrices (cam)
   (gl:matrix-mode :projection)
