@@ -4,15 +4,15 @@
   ((eye
     :accessor cam-eye
     :initarg :eye
-    :initform #(0.0 0.0 0.0))
+    :initform #(0.0d0 0.0d0 0.0d0))
    (up-vec 
     :accessor cam-up
     :initarg :up
-    :initform #(0.0 -1.0 0.0))
+    :initform #(0.0d0 -1.0d0 0.0d0))
    (center
     :accessor cam-center
     :initarg :center
-    :initform #(0.0 0.0 1.0))
+    :initform #(0.0d0 0.0d0 1.0d0))
    (field-of-view-y 
     :accessor cam-fovy
     :initarg :fov
@@ -61,7 +61,8 @@
   (let* ((view (cam-view cam))
 	 (eye (cam-eye cam))
 	 (up (cam-up cam))
-	 (side (v:normalize (v:cross up view)))
+	 (side (v:cross (v:normalize up)
+			(v:normalize view)))
 	 
 	 (rot-matrix (m:rotate side (helpers:radians f)))
 	 
@@ -69,12 +70,11 @@
 				 (m:*-mat-mat
 				  (m:coerce-matrix view)
 				  rot-matrix))))
-	 (new-up (v:normalize 
-		  (m:coerce-vector
-		   (m:*-mat-mat
-		    (m:coerce-matrix up)
-		    rot-matrix)))))
-
+	 (new-up (m:coerce-vector
+		  (m:*-mat-mat
+		   (m:coerce-matrix up)
+		   rot-matrix))))
+;;    (format t "UP: ~A SIDE: ~A VIEW: ~A~%" up side view)
     (setf (cam-center cam) new-center)
     (setf (cam-up cam) new-up)))
 
