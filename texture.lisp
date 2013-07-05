@@ -14,8 +14,20 @@
     ))
     
 (defun load-targa-file (path)
-  (with-open-file (file path
-			:direction :input
-			:if-does-not-exist :error
-			:element-type '(unsigned-byte 8))
-    (
+  (labels ((valid-targa? (stream len)
+	     (let ((spec (make-array 16
+				     :element-type '(unsigned-byte 8)))
+		   (oldpos (file-position stream)))
+	       (file-position stream (- len 18))
+	       (read-sequence spec stream)
+	       (file-position stream oldpos)
+	       (string= "TRUEVISION-XFILE"
+			(map 'string #'code-char spec)))))
+    (with-open-file (tga path
+			 :direction :input
+			 :if-does-not-exist :error
+			 :element-type '(unsigned-byte 8))
+      (let ((len (file-length tga)))
+	(if (valid-targa? tga len)
+	    'ok-valid-targa
+	    'not-sure-it-is)))))
