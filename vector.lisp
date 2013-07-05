@@ -58,5 +58,5 @@
     (make-array 3 
 		:initial-contents
 		(list (- (* a-y b-z) (* b-y a-z))
-		      (- (* a-z b-z) (* b-z a-x))
+		      (- (* a-z b-x) (* b-z a-x))
 		      (- (* a-x b-y) (* b-x a-y))))))
