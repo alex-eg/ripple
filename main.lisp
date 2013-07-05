@@ -31,7 +31,7 @@
 
 (defvar *cam*)
 (setf *cam* (make-instance 'camera:camera
-			   :eye #(0.0d0 0.0d0 0.0d0)))
+			   :eye #(0.0 0.0 0.0)))
 (defun draw ()
   "draw a frame"
   (gl:clear :color-buffer-bit)

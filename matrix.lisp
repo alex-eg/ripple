@@ -2,11 +2,11 @@
 
 (defun identity-matrix ()
   (make-array '(3 3)
-	      :element-type 'double-float
+	      :element-type 'single-float
 	      :initial-contents
-	      '((1.0d0 0.0d0 0.0d0)
-		(0.0d0 1.0d0 0.0d0)
-		(0.0d0 0.0d0 1.0d0))))
+	      '((1.0 0.0 0.0)
+		(0.0 1.0 0.0)
+		(0.0 0.0 1.0))))
 
 (defun coerce-matrix (vector)
   (let ((new-matrix (make-array `(1 ,(length vector)))))
@@ -36,7 +36,7 @@
       (let* ((n (array-dimension matrix 0))
 	     (m (array-dimension matrix 1))
 	     (transposed-matrix (make-array `(,m ,n)
-					    :element-type 'double-float)))
+					    :element-type 'single-float)))
 	(do-matrix ((i n) (j m))
 	  (setf (aref transposed-matrix j i)
 		(aref matrix i j)))
@@ -79,8 +79,8 @@
 	     (let* ((n (array-dimension left 0))
 		    (m (array-dimension left 1))
 		    (new-matrix (make-array `(,n ,m)
-					    :element-type 'double-float
-					    :initial-element 0.0d0)))
+					    :element-type 'single-float
+					    :initial-element 0.0)))
 	       (do-matrix ((i n) (j m))
 		 (setf (aref new-matrix i j)
 		       (+ (aref left i j)
@@ -91,8 +91,8 @@
 
 (defun mat-4 (mat-3)
   (let ((new (make-array '(4 4)
-			 :element-type 'double-float
-			 :initial-element 0.0d0)))
+			 :element-type 'single-float
+			 :initial-element 0.0)))
     (do-matrix ((i 3) (j 3))
       (setf (aref new i j)
 	    (aref mat-3 i j)))
@@ -123,25 +123,25 @@
 
 (defun rotate (vector raw-angle)
   "Creates rotation matrix."
-  (let* ((angle (coerce raw-angle 'double-float))
+  (let* ((angle (coerce raw-angle 'single-float))
 	 (x (v:x vector))
 	 (y (v:y vector))
 	 (z (v:z vector))
 	 
 	 (first-component (*-mat-num (identity-matrix) (cos angle)))
 	 (second-component-matrix (make-array '(3 3)
-					      :element-type 'double-float
+					      :element-type 'single-float
 					      :initial-contents 
 					      `((,(* x x) ,(* x y) ,(* x z))
 						(,(* x y) ,(* y y) ,(* y z))
 						(,(* x z) ,(* z y) ,(* z z)))))
 	 (second-component (*-mat-num second-component-matrix (- 1 (cos angle))))
 	 (third-component-matrix (make-array '(3 3)
-					     :element-type 'double-float
+					     :element-type 'single-float
 					     :initial-contents
-					     `((0.0d0 ,(- z) ,y)
-					       (,z 0.0d0 ,(- x))
-					       (,(- y) ,x 0.0d0))))
+					     `((0.0 ,(- z) ,y)
+					       (,z 0.0 ,(- x))
+					       (,(- y) ,x 0.0))))
 	 (third-component (*-mat-num third-component-matrix (sin angle)))
 	 (rotate-matrix (+-mat first-component
 			       second-component

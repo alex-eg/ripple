@@ -4,15 +4,15 @@
   ((eye
     :accessor cam-eye
     :initarg :eye
-    :initform #(0.0d0 0.0d0 0.0d0))
+    :initform #(0.0 0.0 0.0))
    (up-vec 
     :accessor cam-up
     :initarg :up
-    :initform #(0.0d0 -1.0d0 0.0d0))
+    :initform #(0.0 -1.0 0.0))
    (center
     :accessor cam-center
     :initarg :center
-    :initform #(0.0d0 0.0d0 1.0d0))
+    :initform #(0.0 0.0 1.0))
    (field-of-view-y 
     :accessor cam-fovy
     :initarg :fov
