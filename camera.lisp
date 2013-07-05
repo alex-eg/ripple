@@ -53,7 +53,7 @@
 	 (new-eye (v:add eye
 			 (m:coerce-vector 
 			  (m:*-mat-mat	
-			   (m:coerce-matrix view)
+			   view
 			   rot-matrix)))))
       (setf (cam-center cam) new-eye)))
 
@@ -61,20 +61,16 @@
   (let* ((view (cam-view cam))
 	 (eye (cam-eye cam))
 	 (up (cam-up cam))
-	 (side (v:cross (v:normalize up)
-			(v:normalize view)))
+	 (side (v:cross up view))
 	 
 	 (rot-matrix (m:rotate side (helpers:radians f)))
-	 
-	 (new-center (v:add eye (m:coerce-vector
-				 (m:*-mat-mat
-				  (m:coerce-matrix view)
-				  rot-matrix))))
-	 (new-up (m:coerce-vector
-		  (m:*-mat-mat
-		   (m:coerce-matrix up)
-		   rot-matrix))))
-;;    (format t "UP: ~A SIDE: ~A VIEW: ~A~%" up side view)
+
+	 (new-view (m:coerce-vector
+		    (m:*-mat-mat view rot-matrix)))
+	 (new-center (v:add eye new-view))
+	 ;; What's algorithmically better? Matrix multiplication, or cross product?
+	 ;; Suppose it's cross production
+	 (new-up (v:normalize (v:cross new-view side))))
     (setf (cam-center cam) new-center)
     (setf (cam-up cam) new-up)))
 
