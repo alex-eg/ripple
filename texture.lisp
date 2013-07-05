@@ -28,6 +28,6 @@
 			 :if-does-not-exist :error
 			 :element-type '(unsigned-byte 8))
       (let ((len (file-length tga)))
-	(if (valid-targa? tga len)
-	    'ok-valid-targa
-	    'not-sure-it-is)))))
+	(or (valid-targa? tga len)
+	    (error 
+
