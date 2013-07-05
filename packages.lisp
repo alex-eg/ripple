@@ -51,5 +51,17 @@
 	   :cam-znear
 	   :cam-zfar
 	   :update-matrices))
-	   
-  
+
+(defpackage :resource
+  (:use :cl :helpers))
+
+(defpackage :texture
+  (:use :cl :helpers :resource)
+  (:export :texture))
+
+(defpackage :shader
+  (:use :cl :helpers :resource)
+  (:export :shader
+	   :vertex
+	   :fragment
+	   :program))
