@@ -6,9 +6,10 @@
     :initarg :data
     :initform nil)
    (type 
-    :reader tex-type)))
-    
-
+    :reader tex-type)
+   (height :accessor tex-height)
+   (width :accessor tex-width)))
+ 
 (defmethod load-from-file ((tex texture) (file pathname))
   (let ((file (load-targa-file pathname)))
     ))
@@ -29,5 +30,6 @@
 			 :element-type '(unsigned-byte 8))
       (let ((len (file-length tga)))
 	(or (valid-targa? tga len)
-	    (error 
+	    (error "File ~A is not of a valid New Targa Format" path))
+	
 
