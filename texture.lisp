@@ -6,7 +6,9 @@
     :initarg :data
     :initform nil)
    (type 
-    :reader tex-type)
+    :accessor tex-type)
+   (bpp 
+    :accessor tex-bpp)
    (height :accessor tex-height)
    (width :accessor tex-width)))
 
@@ -30,14 +32,43 @@
 	       (file-position stream oldpos)
 	       (string= "TRUEVISION-XFILE"
 			(map 'string #'code-char spec))))
-	     (compressed? (stream)
-	       (let ((header (make-array 12
-					 :element-type '(unsigned-byte 8)))
-		     (oldpos (file-position stream)))
-		 (file-position stream 0)
-		 (read-sequence header stream)
-		 (file-position stream oldpos)
-		 (equal (aref header 2) 10))))
+	   (read-header (stream)
+	     (let ((header (make-array 18
+				       :element-type '(unsigned-byte 8))))
+	       (file-position stream 0)
+	       (read-sequence header stream)
+	       header))
+	   (compressed? (stream)
+	     (let ((header (read-header stream)))
+	       (equal (aref header 2) 10)))
+	   (load-common-parts (stream tex-struct)
+	     (let ((header (read-header stream)))
+	       (setf (tex-width tex-struct)
+		     (+ (* 256 (aref header 13))
+			(aref header 14)))
+	       (setf (tex-height tex-struct)
+		     (+ (* 256 (aref header 15))
+			(aref header 16)))
+	       (setf (tex-type tex-struct)
+		     (if (= (aref header 17) 32)
+			 :rgba
+			 :rgb))
+	       (setf (tex-data tex-struct)
+		     (make-array (* (/ (aref header 17) 8)
+				    (tex-height tex-struct)
+				    (tex-width tex-struct))
+				 :element-type '(unsigned-byte 8))))
+	     tex-struct)
+	   (load-uncompressed-targa (stream tex-struct)
+	     (setf tex-struct (load-common-parts stream tex-struct))
+	     (setf (tex-data tex-struct)
+		   (read-sequence (tex-data tex-struct) stream))
+	     tex-struct)
+
+	     
+	   (load-compressed-targa (stream tex-struct)
+	     (setf tex-struct (load-common-parts stream tex-struct))
+	     tex-struct))
     (with-open-file (tga path
 			 :direction :input
 			 :if-does-not-exist :error
@@ -46,10 +77,8 @@
 	    (tex-struct (make-targa-texture)))
 	(or (valid-targa? tga len)
 	    (error "File ~A is not of a valid New Targa Format" path))
-	(format t "This file contains ~Ax~A image, color encoding is ~A~%"
-		(
 	(if (compressed? tga)
-	    
-	    (format t "File is not a compressed targa"))))))
-	
+	    (load-compressed-targa tga tex-struct)
+	    (load-uncompressed-targa tga tex-struct))
+	tex-struct))))
 
