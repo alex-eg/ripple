@@ -80,24 +80,17 @@ uncompressed types"
        (load-compressed-targa (stream texture)
 	 "Load rest of RLE compressed texture"
 	 (setf texture (load-common-parts stream texture))
-		 (tex-width texture)
-		 (tex-height texture)
-		 (tex-bpp texture)
-		 (tex-type texture)
-		 (length (tex-data texture))
-		 (file-position stream)
-		 (file-length stream))
 	 (let ((pixel-count (* (tex-width texture)
 			       (tex-height texture)))
 	       (bytes-per-pixel (/ (tex-bpp texture) 8)))
 	   (do ((current-pixel 0)
 		(current-byte 0))
-	       ((>= current-pixel pixel-count))
-	     (let* ((chunk-header (read-byte stream))
-		    (buffer (make-array 
-			     bytes-per-pixel
-			     :element-type '(unsigned-byte 8))))
-	       
+	       ((>= current-pixel pixel-count)
+		texture)
+	     (let ((chunk-header (read-byte stream))
+		   (buffer (make-array 
+			    bytes-per-pixel
+			    :element-type '(unsigned-byte 8))))
 	       (if (< chunk-header 128)
 		   ;;; Raw chunk
 		   (progn 
@@ -128,18 +121,17 @@ uncompressed types"
 				       (+ bytes-per-pixel current-byte))
 			       new)
 			 (incf current-pixel)
-			 (setf current-byte (+ current-byte bytes-per-pixel))))))))
-	   texture)))
-    (with-open-file (tga path
-			 :direction :input
-			 :if-does-not-exist :error
-			 :element-type '(unsigned-byte 8))
-      (let ((len (file-length tga))
-	    (texture (make-instance 'texture)))
-	(or (valid-targa? tga len)
-	    (error "File ~A is not of a valid New Targa Format" path))
-	(if (compressed? tga)
-	    (load-compressed-targa tga texture)
-	    (load-uncompressed-targa tga texture))
-	texture))))
+			 (setf current-byte (+ current-byte bytes-per-pixel)))))))))))
+  (with-open-file (tga path
+		       :direction :input
+		       :if-does-not-exist :error
+		       :element-type '(unsigned-byte 8))
+    (let ((len (file-length tga))
+	  (texture (make-instance 'texture)))
+      (or (valid-targa? tga len)
+	  (error "File ~A is not of a valid New Targa Format" path))
+      (if (compressed? tga)
+	  (load-compressed-targa tga texture)
+	  (load-uncompressed-targa tga texture))
+      texture))))
 
