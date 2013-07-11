@@ -41,14 +41,28 @@
   (cl-glut:wire-sphere 30.0 32 32)
   (gl:translate -15 0.0 -15)
   (draw-grid 30 30 0.3)
+  (draw-textured-quad)
   ;; finish the frame
   (gl:flush)
   (sdl:update-display))
 
+(defun draw-textured-quad ()
+  (gl:bind-texture :texture-2d *texture*)
+  (gl:color 1.0 1.0 1.0)
+  (gl:with-primitive :quads
+    (gl:tex-coord 0.0 0.0)
+    (gl:vertex 10.0 -5.0 -5.0)
+    (gl:tex-coord 4.0 0.0)
+    (gl:vertex 10.0 -5.0 5.0)
+    (gl:tex-coord 4.0 4.0)
+    (gl:vertex 10.0 5.0 5.0)
+    (gl:tex-coord 0.0 4.0)
+    (gl:vertex 10.0 5.0 -5.0)))
+
 (defvar *cam*)
 (setf *cam* (make-instance 'camera:camera
+			   :center #(1.0 0.0 0.0)
 			   :eye #(0.0 0.0 0.0)))
-
 (defvar *texture*)
 
 (defun main-loop ()
@@ -60,21 +74,23 @@
     (cl-glut:init)
     (setf cl-opengl-bindings:*gl-get-proc-address* 
 	  #'sdl-cffi::sdl-gl-get-proc-address)
+    (gl:enable :texture-2d)
     (let ((tex (texture:load-from-file 
 		(make-instance 'texture:texture)
 		#P"./resources/textures/checker.tga")))
-      (setf *texture* (gl:gen-textures 1))
-      (gl:bind-texture :texture-2d gl-tex)
+      (setf *texture* (first (gl:gen-textures 1)))
+      (gl:bind-texture :texture-2d *texture*)
       (gl:tex-parameter :texture-2d :texture-wrap-s :repeat)
       (gl:tex-parameter :texture-2d :texture-wrap-r :repeat)
       (gl:tex-parameter :texture-2d :texture-min-filter :linear)
       (gl:tex-parameter :texture-2d :texture-mag-filter :linear)
+      (format t "Loading texture~%")
       (gl:tex-image-2d :texture-2d 0 :rgb 
 		       (texture:tex-width tex)
 		       (texture:tex-height tex)
 		       0 :rgb :unsigned-byte
 		       (texture:tex-data tex)))
-		       
+    (format t "Loaded texture~%")
     (sdl:with-events ()
       (:quit-event () t)
       (:mouse-button-down-event 
