@@ -4,4 +4,4 @@
   ((name 
     :accessor resource-name
     :initarg :name
-    :initform "unnamed")))
+    :initform :unnamed)))
