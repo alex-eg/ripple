@@ -11,8 +11,8 @@
 	       (:file "vector")
 	       (:file "matrix")
 	       (:file "helpers")
-	       (:file "texture")
 	       (:file "resource")
+	       (:file "texture")
 	       (:file "shader")
 	       (:file "main"))
   :depends-on (:cl-opengl
