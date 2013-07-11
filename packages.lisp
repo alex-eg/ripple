@@ -58,7 +58,13 @@
 
 (defpackage :texture
   (:use :cl :helpers :resource)
-  (:export :texture))
+  (:export :texture
+	   :tex-type
+	   :tex-data
+	   :tex-bpp
+	   :tex-width
+	   :tex-height
+	   :load-from-file))
 
 (defpackage :shader
   (:use :cl :helpers :resource)
