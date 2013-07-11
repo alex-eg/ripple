@@ -11,7 +11,7 @@
 (defun coerce-matrix (vector)
   (let ((new-matrix (make-array `(1 ,(length vector)))))
     (dotimes (i (length vector))
-      (setf (aref new-matrix 0 i) (aref vector i)))
+      (setf (aref new-matrix 0 i) (svref vector i)))
     new-matrix))
 
 (defun coerce-vector (matrix)
@@ -20,7 +20,7 @@
 	  "Matrix is not in a vector form")
   (let ((new-vector (make-array (array-dimension matrix 1))))
     (dotimes (i (array-dimension matrix 1))
-      (setf (aref new-vector i)
+      (setf (svref new-vector i)
 	    (aref matrix 0 i)))
     new-vector))
 
@@ -103,14 +103,14 @@
   (let ((cols (array-dimension matrix 1))
 	(row (make-array (array-dimension matrix 1))))
     (dotimes (j cols)
-      (setf (aref row j) (aref matrix i j)))
+      (setf (svref row j) (aref matrix i j)))
     row))
 
 (defun matrix-col (matrix j)
   (let ((rows (array-dimension matrix 0))
 	(col (make-array (array-dimension matrix 0))))
     (dotimes (i rows)
-      (setf (aref col i) (aref matrix i j)))
+      (setf (svref col i) (aref matrix i j)))
     col))
 
 (defun translate (vector)
@@ -118,7 +118,7 @@
   (let ((translate-matrix (mat-4 (identity-matrix))))
     (dotimes (i 3)
        (setf (aref translate-matrix i 3)
-	     (aref vector i)))
+	     (svref vector i)))
     translate-matrix))
 
 (defun rotate (vector raw-angle)
@@ -152,5 +152,5 @@
   (let ((scale-matrix (identity-matrix)))
     (dotimes (i 3)
       (setf (aref scale-matrix i i)
-	    (aref vector i)))
+	    (svref vector i)))
     scale-matrix))
