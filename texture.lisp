@@ -14,13 +14,8 @@
    (height :accessor tex-height)
    (width :accessor tex-width)))
 
-(defstruct targa-texture
-  data
-  height
-  width
-  type)
- 
 (defmethod load-from-file ((tex texture) (file pathname))
+  "Determines file type and loads file"
   (let ((targa-texture (load-targa-file file)))
     targa-texture))
     
