@@ -53,7 +53,8 @@
 	   :update-matrices))
 
 (defpackage :resource
-  (:use :cl :helpers))
+  (:use :cl :helpers)
+  (:export :resource))
 
 (defpackage :texture
   (:use :cl :helpers :resource)
