@@ -29,9 +29,6 @@
 		(gl:color 0.0 0.38 0.38)
 		(gl:vertex i (* (sin i) (cos j)) j))))))
 
-(defvar *cam*)
-(setf *cam* (make-instance 'camera:camera
-			   :eye #(0.0 0.0 0.0)))
 (defun draw ()
   "draw a frame"
   (gl:clear :color-buffer-bit)
@@ -48,6 +45,12 @@
   (gl:flush)
   (sdl:update-display))
 
+(defvar *cam*)
+(setf *cam* (make-instance 'camera:camera
+			   :eye #(0.0 0.0 0.0)))
+
+(defvar *texture*)
+
 (defun main-loop ()
   (sdl:with-init ()
     (sdl:window 800 600
@@ -57,7 +60,21 @@
     (cl-glut:init)
     (setf cl-opengl-bindings:*gl-get-proc-address* 
 	  #'sdl-cffi::sdl-gl-get-proc-address)
-    
+    (let ((tex (texture:load-from-file 
+		(make-instance 'texture:texture)
+		#P"./resources/textures/checker.tga")))
+      (setf *texture* (gl:gen-textures 1))
+      (gl:bind-texture :texture-2d gl-tex)
+      (gl:tex-parameter :texture-2d :texture-wrap-s :repeat)
+      (gl:tex-parameter :texture-2d :texture-wrap-r :repeat)
+      (gl:tex-parameter :texture-2d :texture-min-filter :linear)
+      (gl:tex-parameter :texture-2d :texture-mag-filter :linear)
+      (gl:tex-image-2d :texture-2d 0 :rgb 
+		       (texture:tex-width tex)
+		       (texture:tex-height tex)
+		       0 :rgb :unsigned-byte
+		       (texture:tex-data tex)))
+		       
     (sdl:with-events ()
       (:quit-event () t)
       (:mouse-button-down-event 
