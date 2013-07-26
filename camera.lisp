@@ -68,8 +68,6 @@
 	 (new-view (m:coerce-vector
 		    (m:*-mat-mat view rot-matrix)))
 	 (new-center (v:add eye new-view))
-	 ;; What's algorithmically better? Matrix multiplication, or cross product?
-	 ;; Suppose it's cross production
 	 (new-up (v:normalize (v:cross new-view side))))
     (setf (cam-center cam) new-center)
     (setf (cam-up cam) new-up)))
