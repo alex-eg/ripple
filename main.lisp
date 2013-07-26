@@ -31,7 +31,7 @@
 
 (defun draw ()
   "draw a frame"
-  (gl:clear :color-buffer-bit)
+  (gl:clear :color-buffer-bit :depth-buffer-bit)
   (gl:matrix-mode :projection)
   (gl:load-identity)
   (gl:matrix-mode :modelview)
@@ -71,10 +71,11 @@
 		:opengl :hw :double-buffer :resizable)
     ;; cl-opengl needs platform specific support to be able to load GL
     ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
-    (cl-glut:init)
     (setf cl-opengl-bindings:*gl-get-proc-address* 
 	  #'sdl-cffi::sdl-gl-get-proc-address)
     (gl:enable :texture-2d)
+    (gl:enable :depth-test)
+    (cl-glut:init)
     (let ((tex (texture:load-from-file 
 		(make-instance 'texture:texture)
 		#P"./resources/textures/checker.tga")))
