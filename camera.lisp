@@ -72,6 +72,16 @@
     (setf (cam-center cam) new-center)
     (setf (cam-up cam) new-up)))
 
+(defmethod rotate-roll ((cam camera) (f float))
+  (let* ((view (cam-view cam))
+	 (up (cam-up cam))
+	 
+	 (rot-matrix (m:rotate view (helpers:radians f)))
+
+	 (new-up (v:normalize (m:coerce-vector
+			       (m:*-mat-mat up rot-matrix)))))
+    (setf (cam-up cam) new-up)))
+
 (defun update-matrices (cam)
   (gl:matrix-mode :projection)
   (gl:load-identity)

@@ -46,6 +46,7 @@
 	   :cam-view
 	   :rotate-yaw
 	   :rotate-pitch
+	   :rotate-roll
 	   :with-old-parameters
 	   :cam-aspect
 	   :cam-znear

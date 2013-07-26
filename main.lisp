@@ -71,6 +71,7 @@
 		:opengl :hw :double-buffer :resizable)
     ;; cl-opengl needs platform specific support to be able to load GL
     ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
+    (sdl:enable-key-repeat 50 20)
     (setf cl-opengl-bindings:*gl-get-proc-address* 
 	  #'sdl-cffi::sdl-gl-get-proc-address)
     (gl:enable :texture-2d)
@@ -93,25 +94,32 @@
 		       (texture:tex-data tex)))
     (format t "Loaded texture~%")
     (sdl:with-events ()
+      (:key-down-event
+       (:key key)
+       (when (sdl:key= key :sdl-key-q)
+	 (camera:rotate-roll *cam* 1.9))
+       (when (sdl:key= key :sdl-key-e)
+	 (camera:rotate-roll *cam* -1.9)))
+       
       (:quit-event () t)
       (:mouse-button-down-event 
        (:button b)
-       (cond ((= b sdl:mouse-wheel-up)
-      	      (camera:with-old-parameters (*cam* :eye old-eye 
-						 :view old-view)
-      		(let ((newpos (v:add old-view old-eye)))
-      		  (setf (camera:cam-eye *cam*) newpos))))
-	     
-      	     ((= b sdl:mouse-wheel-down)
-      	      (camera:with-old-parameters (*cam* :eye old-eye 
-						 :view old-view)
-      		(let ((newpos (v:sub old-eye old-view)))
-      		  (setf (camera:cam-eye *cam*) newpos))))))
+       (when (sdl:key= b sdl:sdl-button-wheel-up)
+	 (camera:with-old-parameters (*cam* :eye old-eye 
+					    :view old-view)
+	   (let ((newpos (v:add old-view old-eye)))
+	     (setf (camera:cam-eye *cam*) newpos))))
+       
+       (when (sdl:key= b sdl:sdl-button-wheel-down)
+	 (camera:with-old-parameters (*cam* :eye old-eye 
+					    :view old-view)
+	   (let ((newpos (v:sub old-eye old-view)))
+	     (setf (camera:cam-eye *cam*) newpos)))))
       
       (:mouse-motion-event 
        (:x-rel dx :y-rel dy)
        (when (sdl:mouse-right-p) ;; rotate view
-	 (camera:rotate-yaw *cam* (/ dx 10.0))
+	 (camera:rotate-yaw *cam* (/ dx -10.0))
 	 (camera:rotate-pitch *cam* (/ dy 10.0)))
        (when (sdl:mouse-left-p) ;; move through the field
 	 (camera:with-old-parameters (*cam* :eye eye
