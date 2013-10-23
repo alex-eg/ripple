@@ -69,7 +69,7 @@
 
 (defpackage :shader
   (:use :cl :helpers :resource)
-  (:export :shader
-	   :vertex
-	   :fragment
-	   :program))
+  (:export :shader-program
+	   :program-id
+	   :set-shader
+	   :compile-program))
