@@ -1,2 +1,2 @@
 clean:
-	rm -f *~
+	rm -f *~ *.wx32fsl *.fasl
