@@ -69,9 +69,9 @@
   (sdl:with-init ()
     (sdl:window 800 600
 		:opengl :hw :double-buffer :resizable)
+    (sdl:enable-key-repeat 50 20)
     ;; cl-opengl needs platform specific support to be able to load GL
     ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
-    (sdl:enable-key-repeat 50 20)
     (setf cl-opengl-bindings:*gl-get-proc-address* 
 	  #'sdl-cffi::sdl-gl-get-proc-address)
     (gl:enable :texture-2d)
