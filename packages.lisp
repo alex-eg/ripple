@@ -55,7 +55,8 @@
 
 (defpackage :resource
   (:use :cl :helpers)
-  (:export :resource))
+  (:export :resource
+	   :resource-name))
 
 (defpackage :texture
   (:use :cl :helpers :resource)
