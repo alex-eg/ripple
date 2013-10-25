@@ -1,7 +1,7 @@
 (in-package :resource)
 
 (defclass resource ()
-  ((name 
+  ((name
     :accessor resource-name
     :initarg :name
     :initform :unnamed)))

@@ -19,15 +19,15 @@
 (defun draw-grid (width length stride)
   (let ((h 0))
     (loop for i from 0 to width by stride do
-	 (gl:with-primitive :line-strip
-	   (loop for j from 0 to length by stride do    
-		(gl:color 0.0 0.38 0.38)
-		(gl:vertex i (* (sin i) (cos j)) j))))
-    (loop for j from 0 to length by stride do    
-	 (gl:with-primitive :line-strip
-	   (loop for i from 0 to width by stride do
-		(gl:color 0.0 0.38 0.38)
-		(gl:vertex i (* (sin i) (cos j)) j))))))
+         (gl:with-primitive :line-strip
+           (loop for j from 0 to length by stride do
+                (gl:color 0.0 0.38 0.38)
+                (gl:vertex i (* (sin i) (cos j)) j))))
+    (loop for j from 0 to length by stride do
+         (gl:with-primitive :line-strip
+           (loop for i from 0 to width by stride do
+                (gl:color 0.0 0.38 0.38)
+                (gl:vertex i (* (sin i) (cos j)) j))))))
 
 (defun draw ()
   "draw a frame"
@@ -61,25 +61,25 @@
 
 (defvar *cam*)
 (setf *cam* (make-instance 'camera:camera
-			   :center #(1.0 0.0 0.0)
-			   :eye #(0.0 0.0 0.0)))
+                           :center #(1.0 0.0 0.0)
+                           :eye #(0.0 0.0 0.0)))
 (defvar *texture*)
 
 (defun main-loop ()
   (sdl:with-init ()
     (sdl:window 800 600
-		:opengl :hw :double-buffer :resizable)
+                :opengl :hw :double-buffer :resizable)
     (sdl:enable-key-repeat 50 20)
     ;; cl-opengl needs platform specific support to be able to load GL
     ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
-    (setf cl-opengl-bindings:*gl-get-proc-address* 
-	  #'sdl-cffi::sdl-gl-get-proc-address)
+    (setf cl-opengl-bindings:*gl-get-proc-address*
+          #'sdl-cffi::sdl-gl-get-proc-address)
     (gl:enable :texture-2d)
     (gl:enable :depth-test)
     (cl-glut:init)
-    (let ((tex (texture:load-from-file 
-		(make-instance 'texture:texture)
-		#P"./resources/textures/checker.tga")))
+    (let ((tex (texture:load-from-file
+                (make-instance 'texture:texture)
+                #P"./resources/textures/checker.tga")))
       (setf *texture* (first (gl:gen-textures 1)))
       (gl:bind-texture :texture-2d *texture*)
       (gl:tex-parameter :texture-2d :texture-wrap-s :repeat)
@@ -87,61 +87,61 @@
       (gl:tex-parameter :texture-2d :texture-min-filter :linear)
       (gl:tex-parameter :texture-2d :texture-mag-filter :linear)
       (format t "Loading texture~%")
-      (gl:tex-image-2d :texture-2d 0 :rgb 
-		       (texture:tex-width tex)
-		       (texture:tex-height tex)
-		       0 :rgb :unsigned-byte
-		       (texture:tex-data tex)))
+      (gl:tex-image-2d :texture-2d 0 :rgb
+                       (texture:tex-width tex)
+                       (texture:tex-height tex)
+                       0 :rgb :unsigned-byte
+                       (texture:tex-data tex)))
     (format t "Loaded texture~%")
     (sdl:with-events ()
       (:key-down-event
        (:key key)
        (when (sdl:key= key :sdl-key-q)
-	 (camera:rotate-roll *cam* 1.9))
+         (camera:rotate-roll *cam* 1.9))
        (when (sdl:key= key :sdl-key-e)
-	 (camera:rotate-roll *cam* -1.9)))
-       
+         (camera:rotate-roll *cam* -1.9)))
+
       (:quit-event () t)
-      (:mouse-button-down-event 
+      (:mouse-button-down-event
        (:button b)
        (when (sdl:key= b sdl:sdl-button-wheel-up)
-	 (camera:with-old-parameters (*cam* :eye old-eye 
-					    :view old-view)
-	   (let ((newpos (v:add old-view old-eye)))
-	     (setf (camera:cam-eye *cam*) newpos))))
-       
+         (camera:with-old-parameters (*cam* :eye old-eye
+                                            :view old-view)
+           (let ((newpos (v:add old-view old-eye)))
+             (setf (camera:cam-eye *cam*) newpos))))
+
        (when (sdl:key= b sdl:sdl-button-wheel-down)
-	 (camera:with-old-parameters (*cam* :eye old-eye 
-					    :view old-view)
-	   (let ((newpos (v:sub old-eye old-view)))
-	     (setf (camera:cam-eye *cam*) newpos)))))
-      
-      (:mouse-motion-event 
+         (camera:with-old-parameters (*cam* :eye old-eye
+                                            :view old-view)
+           (let ((newpos (v:sub old-eye old-view)))
+             (setf (camera:cam-eye *cam*) newpos)))))
+
+      (:mouse-motion-event
        (:x-rel dx :y-rel dy)
        (when (sdl:mouse-right-p) ;; rotate view
-	 (camera:rotate-yaw *cam* (/ dx -10.0))
-	 (camera:rotate-pitch *cam* (/ dy 10.0)))
+         (camera:rotate-yaw *cam* (/ dx -10.0))
+         (camera:rotate-pitch *cam* (/ dy 10.0)))
        (when (sdl:mouse-left-p) ;; move through the field
-	 (camera:with-old-parameters (*cam* :eye eye
-					    :center center
-					    :up up
-					    :view view)
-	   (let* ((old-dir (vector (v:x view) 0.0 (v:z view)))
-		  (strafe (v:cross up view))
-		  (d-dir (v:add (v:mul-num old-dir (/ dy 10))
-				(v:mul-num strafe (/ dx 10))))
+         (camera:with-old-parameters (*cam* :eye eye
+                                            :center center
+                                            :up up
+                                            :view view)
+           (let* ((old-dir (vector (v:x view) 0.0 (v:z view)))
+                  (strafe (v:cross up view))
+                  (d-dir (v:add (v:mul-num old-dir (/ dy 10))
+                                (v:mul-num strafe (/ dx 10))))
 
-		  (new-eye (v:add eye d-dir))
-		  (new-center (v:add center d-dir)))
-	     
-	     (setf (camera:cam-eye *cam*) new-eye)
-	     (setf (camera:cam-center *cam*) new-center)))))
+                  (new-eye (v:add eye d-dir))
+                  (new-center (v:add center d-dir)))
+
+             (setf (camera:cam-eye *cam*) new-eye)
+             (setf (camera:cam-center *cam*) new-center)))))
       (:idle ()
              ;; this lets slime keep working while the main loop is running
              ;; in sbcl using the :fd-handler swank:*communication-style*
              ;; (something similar might help in some other lisps, not sure which though)
              #+(and sbcl (not sb-thread)) (restartable
-					    (sb-sys:serve-all-events 0))
+                                           (sb-sys:serve-all-events 0))
              (restartable (draw))))))
 
 
