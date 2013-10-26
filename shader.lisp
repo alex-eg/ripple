@@ -46,13 +46,16 @@
   (setf (slot-value program shader-type) shader-path))
 
 (defun load-shader-from-file (source)
-  (with-open-file (shader-file
-                   source
-                   :direction :input
-                   :if-does-not-exist :error)
-    (let ((s (make-string (file-length shader-file))))
-      (read-sequence s shader-file)
-      s)))
+  (let ((shader-lines nil))
+    (with-open-file (shader-file
+                     source
+                     :direction :input
+                     :if-does-not-exist :error)
+      (do ((line (read-line shader-file nil)
+                 (read-line shader-file nil)))
+          ((null line))
+        (setf shader-lines (cons line shader-lines))))
+      (reverse shader-lines)))
 
 (defun shader-loadedp (program type)
   (slot-value program type))
