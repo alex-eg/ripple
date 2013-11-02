@@ -5,7 +5,7 @@
  (remember to hit C in slime or pick the restart so errors don't kill the app)"
   `(restart-case
        (progn ,@body)
-     (continue () :report "Continue"  )))
+     (continue () :report "Continue")))
 
 (defun draw-triangle ()
   (gl:with-primitive :triangles
