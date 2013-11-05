@@ -74,3 +74,7 @@
            :program-id
            :set-shader
            :compile-program))
+
+(defpackage :state
+  (:use :cl)
+  (:export :state-vao))

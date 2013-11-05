@@ -14,6 +14,7 @@
                  (:file "resource")
                  (:file "texture")
                  (:file "shader")
+                 (:file "state")
                  (:file "main"))
     :depends-on (:cl-opengl
                  :lispbuilder-sdl
