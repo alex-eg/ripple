@@ -111,15 +111,22 @@
          (:button b)
          (when (sdl:key= b sdl:sdl-button-wheel-up)
            (camera:with-old-parameters (cam :eye old-eye
+                                            :center old-center
                                             :view old-view)
-             (let ((newpos (v:add old-view old-eye)))
-               (setf (camera:cam-eye cam) newpos))))
+             (let ((new-pos (v:add old-view old-eye))
+                   (new-center (v:add old-center old-view)))
+               (setf (camera:cam-eye cam) new-pos)
+               (setf (camera:cam-center cam) new-center))))
+           
 
          (when (sdl:key= b sdl:sdl-button-wheel-down)
            (camera:with-old-parameters (cam :eye old-eye
+                                            :center old-center
                                             :view old-view)
-             (let ((newpos (v:sub old-eye old-view)))
-               (setf (camera:cam-eye cam) newpos)))))
+             (let ((new-pos (v:sub old-eye old-view))
+                   (new-center (v:sub old-center old-view)))
+               (setf (camera:cam-center cam) new-center)
+               (setf (camera:cam-eye cam) new-pos)))))
 
         (:mouse-motion-event
          (:x-rel dx :y-rel dy)
