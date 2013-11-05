@@ -77,4 +77,5 @@
 
 (defpackage :state
   (:use :cl)
-  (:export :state-vao))
+  (:export :state
+           :state-vao))
