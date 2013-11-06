@@ -17,17 +17,16 @@
     (gl:vertex 1 0 0)))
 
 (defun draw-grid (width length stride)
-  (let ((h 0))
-    (loop for i from 0 to width by stride do
-         (gl:with-primitive :line-strip
-           (loop for j from 0 to length by stride do
-                (gl:color 0.0 0.38 0.38)
-                (gl:vertex i (* (sin i) (cos j)) j))))
-    (loop for j from 0 to length by stride do
-         (gl:with-primitive :line-strip
-           (loop for i from 0 to width by stride do
-                (gl:color 0.0 0.38 0.38)
-                (gl:vertex i (* (sin i) (cos j)) j))))))
+  (loop for i from 0 to width by stride do
+       (gl:with-primitive :line-strip
+         (loop for j from 0 to length by stride do
+              (gl:color 0.76 0.0 0.0)
+              (gl:vertex i (* (sin i) (cos j)) j))))
+  (loop for j from 0 to length by stride do
+       (gl:with-primitive :line-strip
+         (loop for i from 0 to width by stride do
+              (gl:color 0.76 0.0 0.0)
+              (gl:vertex i (* (sin i) (cos j)) j)))))
 
 (defun draw (camera texture)
   "draw a frame"
