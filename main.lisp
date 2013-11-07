@@ -72,9 +72,9 @@
       ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
       (setf cl-opengl-bindings:*gl-get-proc-address*
             #'sdl-cffi::sdl-gl-get-proc-address)
+      (cl-glut:init)
       (gl:enable :texture-2d)
       (gl:enable :depth-test)
-      (cl-glut:init)
       (let ((tex (texture:load-from-file
                   (make-instance 'texture:texture)
                   #P"./resources/textures/checker.tga")))
@@ -85,10 +85,13 @@
         (gl:tex-parameter :texture-2d :texture-min-filter :linear)
         (gl:tex-parameter :texture-2d :texture-mag-filter :linear)
         (format t "Loading texture~%")
-        (gl:tex-image-2d :texture-2d 0 :rgb
+        (gl:tex-image-2d :texture-2d 0 
+                         (texture:tex-type tex)
                          (texture:tex-width tex)
                          (texture:tex-height tex)
-                         0 :rgb :unsigned-byte
+                         0 
+                         (texture:tex-type tex)
+                         :unsigned-byte
                          (texture:tex-data tex)))
       (format t "Loaded texture~%")
 
