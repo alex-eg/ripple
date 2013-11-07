@@ -53,10 +53,10 @@
 uncompressed types"
          (let ((header (read-header stream)))
            (setf (tex-width texture)
-                 (+ (* 256 (aref header 11))
+                 (+ (* 256 (aref header 13))
                     (aref header 12)))
            (setf (tex-height texture)
-                 (+ (* 256 (aref header 13))
+                 (+ (* 256 (aref header 15))
                     (aref header 14)))
            (cond ((= (aref header 16) 32)
                   (setf (tex-type texture) :rgba)
