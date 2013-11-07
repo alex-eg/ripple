@@ -14,6 +14,7 @@
    (height :accessor tex-height)
    (width :accessor tex-width)))
 
+(defgeneric load-from-file (texture pathname))
 (defmethod load-from-file ((tex texture) (file pathname))
   "Determines file type and loads file"
   (let ((targa-texture (load-targa-file file)))
