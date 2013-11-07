@@ -80,8 +80,7 @@ uncompressed types"
        (load-uncompressed-targa (stream texture)
          "Load rest of the uncompressed texture"
          (setf texture (load-common-parts stream texture))
-         (setf (tex-data texture)
-               (read-sequence (tex-data texture) stream))
+         (read-sequence (tex-data texture) stream)
          texture)
        ;; --------------------------------------
        (load-compressed-targa (stream texture)
