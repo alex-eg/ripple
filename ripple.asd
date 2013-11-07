@@ -6,17 +6,18 @@
 (in-package :ripple-asd)
 
 (defsystem :ripple
-    :components ((:file "packages")
-                 (:file "camera")
-                 (:file "vector")
-                 (:file "matrix")
-                 (:file "helpers")
-                 (:file "resource")
-                 (:file "texture")
-                 (:file "shader")
-                 (:file "state")
-                 (:file "main"))
-    :depends-on (:cl-opengl
-                 :lispbuilder-sdl
-                 :cl-glut
-                 :cl-glu))
+  :serial t
+  :components ((:file "packages")
+               (:file "camera")
+               (:file "vector")
+               (:file "matrix")
+               (:file "helpers")
+               (:file "resource")
+               (:file "texture")
+               (:file "shader")
+               (:file "state")
+               (:file "main"))
+  :depends-on (:cl-opengl
+               :lispbuilder-sdl
+               :cl-glut
+               :cl-glu))
