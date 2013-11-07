@@ -68,8 +68,14 @@ uncompressed types"
                  (make-array (* (/ (aref header 16) 8)
                                 (tex-height texture)
                                 (tex-width texture))
-                             :element-type '(unsigned-byte 8))))
-         texture)
+                             :element-type '(unsigned-byte 8)))
+           (let ((color-map-length (+ (* 256 (aref header 6))
+                                      (aref header 5)))
+                 (color-map-entry-size (aref header 7)))
+             (file-position stream (+ 18 (aref header 0)
+                                      (* color-map-entry-size
+                                         color-map-length))))
+           texture))
        ;; --------------------------------------
        (load-uncompressed-targa (stream texture)
          "Load rest of the uncompressed texture"
