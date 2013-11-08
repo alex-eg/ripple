@@ -33,7 +33,7 @@
 (defmethod cam-view ((cam camera))
   (let ((eye (cam-eye cam))
         (center (cam-center cam)))
-    (v:sub center eye)))
+    (v:- center eye)))
 
 (defmethod print-camera-parameters ((cam camera))
   (let ((c (cam-center cam))
@@ -50,7 +50,7 @@
 
          (rot-matrix (m:rotate up (helpers:radians f)))
 
-         (new-eye (v:add eye
+         (new-eye (v:+ eye
                          (m:coerce-vector
                           (m:*-mat-mat
                            view
@@ -67,7 +67,7 @@
 
          (new-view (m:coerce-vector
                     (m:*-mat-mat view rot-matrix)))
-         (new-center (v:add eye new-view))
+         (new-center (v:+ eye new-view))
          (new-up (v:normalize (v:cross new-view side))))
     (setf (cam-center cam) new-center)
     (setf (cam-up cam) new-up)))

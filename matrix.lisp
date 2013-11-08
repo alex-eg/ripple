@@ -168,7 +168,7 @@
                       (aref ,mat ,row 1) (aref ,vec 1)
                       (aref ,mat ,row 2) (aref ,vec 2)
                       (aref ,mat ,row 3) (trans ,vec ,eye))))
-    (let* ((w (v:normalize (v:sub eye center)))
+    (let* ((w (v:normalize (v:- eye center)))
            (u (v:normalize (v:cross up w)))
            (v (v:normalize (v:cross w u)))
            (look-at-matrix (mat-4 (identity-matrix))))
@@ -178,8 +178,9 @@
       (setf (aref look-at-matrix 3 3) 1.0)
       look-at-matrix)))
 
-(defun perspective (fovy aspect z-near z-far)
+#|(defun perspective (fovy aspect z-near z-far)
   (let ((theta (/ fovy (* 2.0 pi 180.0)))
         (cot (/ 1.0 (tan th)))
         (perspective-matrix (mat-4 (identity-matrix))))
     (
+|#

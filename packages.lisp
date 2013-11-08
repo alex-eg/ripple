@@ -9,12 +9,13 @@
 
 (defpackage :v ; vectors
   (:use :helpers :cl)
+  (:shadow cl:+ cl:-)
   (:export :x
            :y
            :z
-           :add
-           :sub
-           :mul-num
+           :+
+           :-
+           :*.
            :normalize
            :cross
            :mag))

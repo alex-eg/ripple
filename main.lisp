@@ -115,8 +115,8 @@
            (camera:with-old-parameters (cam :eye old-eye
                                             :center old-center
                                             :view old-view)
-             (let ((new-pos (v:add old-view old-eye))
-                   (new-center (v:add old-center old-view)))
+             (let ((new-pos (v:+ old-view old-eye))
+                   (new-center (v:+ old-center old-view)))
                (setf (camera:cam-eye cam) new-pos)
                (setf (camera:cam-center cam) new-center))))
            
@@ -125,8 +125,8 @@
            (camera:with-old-parameters (cam :eye old-eye
                                             :center old-center
                                             :view old-view)
-             (let ((new-pos (v:sub old-eye old-view))
-                   (new-center (v:sub old-center old-view)))
+             (let ((new-pos (v:- old-eye old-view))
+                   (new-center (v:- old-center old-view)))
                (setf (camera:cam-center cam) new-center)
                (setf (camera:cam-eye cam) new-pos)))))
 
@@ -142,11 +142,11 @@
                                             :view view)
              (let* ((old-dir (vector (v:x view) 0.0 (v:z view)))
                     (strafe (v:cross up view))
-                    (d-dir (v:add (v:mul-num old-dir (/ dy 10))
-                                  (v:mul-num strafe (/ dx 10))))
+                    (d-dir (v:+ (v:*. old-dir (/ dy 10))
+                                  (v:*. strafe (/ dx 10))))
 
-                    (new-eye (v:add eye d-dir))
-                    (new-center (v:add center d-dir)))
+                    (new-eye (v:+ eye d-dir))
+                    (new-center (v:+ center d-dir)))
 
                (setf (camera:cam-eye cam) new-eye)
                (setf (camera:cam-center cam) new-center)))))

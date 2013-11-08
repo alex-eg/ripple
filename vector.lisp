@@ -9,21 +9,21 @@
 (defun z (v)
   (aref v 2))
 
-(defun add (v1 v2)
+(defun + (v1 v2)
   "Sums two vectors"
   (vector
-   (+ (x v1) (x v2))
-   (+ (y v1) (y v2))
-   (+ (z v1) (z v2))))
+   (cl:+ (x v1) (x v2))
+   (cl:+ (y v1) (y v2))
+   (cl:+ (z v1) (z v2))))
 
-(defun sub (v1 v2)
+(defun - (v1 v2)
   "Subtracts one vector from another"
   (vector
-   (- (x v1) (x v2))
-   (- (y v1) (y v2))
-   (- (z v1) (z v2))))
+   (cl:- (x v1) (x v2))
+   (cl:- (y v1) (y v2))
+   (cl:- (z v1) (z v2))))
 
-(defun mul-num (vect num)
+(defun *. (vect num)
   (vector (* num (x vect))
           (* num (y vect))
           (* num (z vect))))
@@ -32,7 +32,7 @@
   "Returns vector magnitude"
   (sqrt
    (reduce (lambda (c x)
-             (+ c (* x x)))
+             (cl:+ c (* x x)))
            vec
            :initial-value 0.0)))
 
@@ -57,6 +57,6 @@
         (b-z (z b)))
     (make-array 3
                 :initial-contents
-                (list (- (* a-y b-z) (* b-y a-z))
-                      (- (* a-z b-x) (* b-z a-x))
-                      (- (* a-x b-y) (* b-x a-y))))))
+                (list (cl:- (* a-y b-z) (* b-y a-z))
+                      (cl:- (* a-z b-x) (* b-z a-x))
+                      (cl:- (* a-x b-y) (* b-x a-y))))))
