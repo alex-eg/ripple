@@ -8,7 +8,7 @@
   (:export :radians))
 
 (defpackage :v ; vectors
-  (:use :cl :helpers)
+  (:use :helpers :cl)
   (:export :x
            :y
            :z

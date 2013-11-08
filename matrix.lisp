@@ -177,3 +177,9 @@
       (setf-row 2 look-at-matrix w eye)
       (setf (aref look-at-matrix 3 3) 1.0)
       look-at-matrix)))
+
+(defun perspective (fovy aspect z-near z-far)
+  (let ((theta (/ fovy (* 2.0 pi 180.0)))
+        (cot (/ 1.0 (tan th)))
+        (perspective-matrix (mat-4 (identity-matrix))))
+    (
