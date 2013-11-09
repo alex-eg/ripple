@@ -186,9 +186,16 @@
       (setf (aref look-at-matrix 3 3) 1.0)
       look-at-matrix)))
 
-#|(defun perspective (fovy aspect z-near z-far)
+(defun perspective (fovy aspect z-near z-far)
   (let ((theta (/ fovy (* 2.0 pi 180.0)))
         (cot (/ 1.0 (tan th)))
         (perspective-matrix (mat-4 (identity-matrix))))
-    (
-|#
+    (set-mat-row perspective-matrix 0 (vector (/ cot aspect) 0.0 0.0 0.0))
+    (set-mat-row perspective-matrix 1 (vector 0.0 cot 0.0 0.0))
+    (set-mat-row perspective-matrix 2 (vector 0.0
+                                              0.0
+                                              (/ (+ z-far z-near)
+                                                 (- z-near z-far))
+                                              (/ (* 2.0 z-far z-near)
+                                                 (- z-near z-far))))
+    (set-mat-row perspective-matrix 3 (vector 0.0 0.0 -1.0 0.0))))
