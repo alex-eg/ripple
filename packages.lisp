@@ -31,6 +31,7 @@
            :*-mat-mat
            :*-mat-num
            :+-mat
+           :set-mat-row
            :mat-4
            :matrix-row
            :coerce-matrix

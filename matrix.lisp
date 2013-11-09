@@ -8,6 +8,14 @@
                 (0.0 1.0 0.0)
                 (0.0 0.0 1.0))))
 
+(defun set-mat-row (matrix row vec)
+  (assert (= (array-dimension matrix 1)
+             (length vec)))
+  (let ((row-len (array-dimension matrix 1)))
+    (dotimes (i row-len)
+      (setf (aref matrix row i) (aref vec i)))
+    matrix))
+
 (defun coerce-matrix (vector)
   (let ((new-matrix (make-array `(1 ,(length vector)))))
     (dotimes (i (length vector))
