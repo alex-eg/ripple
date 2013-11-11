@@ -45,6 +45,17 @@
                        (shader-type symbol))
   (setf (slot-value program shader-type) shader-path))
 
+(flet ((get-log (get-log-function id name)
+         (let ((log (funcall get-log-function id)))
+           (if (> (length log) 0)
+               (format t "~A reports: ~A~%" name log)))))
+
+  (defun get-compile-errors (shader-id)
+    (get-log #'gl:get-shader-info-log shader-id "Shader"))
+
+  (defun get-link-errors (program-id)
+    (get-log #'gl:get-program-info-log program-id "Program")))
+
 (defun load-shader-from-file (source)
   (let ((shader-lines nil))
     (with-open-file (shader-file
@@ -78,6 +89,7 @@
                  (gl:attach-shader program-id shader-id)
                  (gl:shader-source shader-id shader-source)
                  (gl:compile-shader shader-id)
+                 (get-compile-errors shader-id)
                  (setf attached-shaders
                        (append attached-shaders (list shader-id))))))
       (mapcar (lambda (type)
@@ -85,6 +97,7 @@
                     (load-and-compile-shader program type)))
               shader-type-list)
       (gl:link-program (program-id program))
+      (get-link-errors (program-id program))
       (mapcar (lambda (shader-id)
                 (gl:detach-shader (program-id program)
                                   shader-id)
