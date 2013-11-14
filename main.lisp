@@ -72,15 +72,15 @@
       ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
       (setf cl-opengl-bindings:*gl-get-proc-address*
             #'sdl-cffi::sdl-gl-get-proc-address)
-      (cl-glut:init)
-      (gl:enable :texture-2d)
-      (gl:enable :depth-test)
+;      (cl-glut:init)
+;      (gl:enable :texture-2d)
+;      (gl:enable :depth-test)
       (let ((tex (texture:load-from-file
                   (make-instance 'texture:texture)
                   #P"./resources/textures/checker.tga"))
             (blinn (make-instance 'shader:shader-program)))
-        (shader:set-shader blinn #P"./resources/shaders/light.vert.glsl" :vertex-shader)
         (shader:set-shader blinn #P"./resources/shaders/light.frag.glsl" :fragment-shader)
+        (shader:set-shader blinn #P"./resources/shaders/light.vert.glsl" :vertex-shader)
         (shader:compile-program blinn)
         (setf texture (first (gl:gen-textures 1)))
         (gl:bind-texture :texture-2d texture)
