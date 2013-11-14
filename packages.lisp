@@ -5,7 +5,8 @@
 
 (defpackage :helpers
   (:use :cl)
-  (:export :radians))
+  (:export :radians
+           :make-keyword))
 
 (defpackage :v ; vectors
   (:use :helpers :cl)
