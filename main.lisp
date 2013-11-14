@@ -77,7 +77,11 @@
       (gl:enable :depth-test)
       (let ((tex (texture:load-from-file
                   (make-instance 'texture:texture)
-                  #P"./resources/textures/checker.tga")))
+                  #P"./resources/textures/checker.tga"))
+            (blinn (make-instance 'shader:shader-program)))
+        (shader:set-shader blinn #P"./resources/shaders/light.vert.glsl" :vertex-shader)
+        (shader:set-shader blinn #P"./resources/shaders/light.frag.glsl" :fragment-shader)
+        (shader:compile-program blinn)
         (setf texture (first (gl:gen-textures 1)))
         (gl:bind-texture :texture-2d texture)
         (gl:tex-parameter :texture-2d :texture-wrap-s :repeat)
