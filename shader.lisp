@@ -43,14 +43,12 @@
 
 (defmethod set-shader ((program shader-program) (shader-path pathname)
                        (shader-type symbol))
-  (let* ((method-list '((:vertex-shader . #'vertex-shader)
-                        (:tess-control-shader . #'tess-control-shader)
-                        (:tess-evaluation-shader . #'tess-evaluation-shader)
-                        (:geometry-shader . #'geometry-shader)
-                        (:fragment-shader . #'fragment-shader)
-                        (:compute-shader . #'compute-shader)))
-           (slot (funcall (cdr (assoc shader-type method-list)))))
-    (setf slot shader-path)))
+  (cond ((eq shader-type :vertex-shader) (setf (vertex-shader program) shader-path))
+        ((eq shader-type :tess-control-shader) (setf (tess-control-shader program) shader-path))
+        ((eq shader-type :tess-evaluation-shader) (setf (tess-evaluation-shader program) shader-path))
+        ((eq shader-type :geometry-shader) (setf (geometry-shader program) shader-path))
+        ((eq shader-type :fragment-shader) (setf (fragment-shader program) shader-path))
+        ((eq shader-type :compute-shader) (setf (compute-shader program) shader-path))))
 
 (flet ((get-log (get-log-function id name)
          (let ((log (funcall get-log-function id)))
@@ -80,15 +78,20 @@
 
 (defun compile-program (program)
   (setf (program-id program) (gl:create-program))
-  (let ((shader-type-list '(:vertex-shader
-                            :tess-control-shader
-                            :tess-evaluation-shader
-                            :geometry-shader
-                            :fragment-shader
-                            :compute-shader))
+  (let ((shader-type-list '(vertex-shader
+                            tess-control-shader
+                            tess-evaluation-shader
+                            geometry-shader
+                            fragment-shader
+                            compute-shader))
         (attached-shaders '()))
     (labels ((load-and-compile-shader (program type)
-               (let* ((shader-id (gl:create-shader type))
+               (let* ((shader-type-list '((vertex-shader . :vertex-shader)
+                                          (tess-control-shader . :tess-control-shader)
+                                          (geometry-shader . :geometry-shader)
+                                          (fragment-shader . :fragment-shader)
+                                          (compute-shader . :compute-shader)))
+                      (shader-id (gl:create-shader (cdr (assoc type shader-type-list))))
                       (program-id (program-id program))
                       (shader-path (slot-value program type))
                       (shader-source (load-shader-from-file
