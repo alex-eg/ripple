@@ -43,7 +43,14 @@
 
 (defmethod set-shader ((program shader-program) (shader-path pathname)
                        (shader-type symbol))
-  (setf (slot-value program shader-type) shader-path))
+  (let* ((method-list '((:vertex-shader . #'vertex-shader)
+                        (:tess-control-shader . #'tess-control-shader)
+                        (:tess-evaluation-shader . #'tess-evaluation-shader)
+                        (:geometry-shader . #'geometry-shader)
+                        (:fragment-shader . #'fragment-shader)
+                        (:compute-shader . #'compute-shader)))
+           (slot (funcall (cdr (assoc shader-type method-list)))))
+    (setf slot shader-path)))
 
 (flet ((get-log (get-log-function id name)
          (let ((log (funcall get-log-function id)))
