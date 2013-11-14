@@ -1,6 +1,6 @@
 (in-package :shader)
 
-(defclass shader (resource:resource)
+(defclass shader (resource)
   ((filename
     :accessor shader-filename
     :initform nil
@@ -15,7 +15,7 @@
     :accessor shader-source
     :initform "")))
 
-(defclass shader-program (resource:resource)
+(defclass shader-program (resource)
   ((program
     :accessor program-id
     :initform nil)
