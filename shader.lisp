@@ -41,26 +41,6 @@
 
 ;;----------------------------------------------
 
-(defmethod set-shader ((program shader-program) (shader-path pathname)
-                       (shader-type symbol))
-  (cond ((eq shader-type :vertex-shader) (setf (vertex-shader program) shader-path))
-        ((eq shader-type :tess-control-shader) (setf (tess-control-shader program) shader-path))
-        ((eq shader-type :tess-evaluation-shader) (setf (tess-evaluation-shader program) shader-path))
-        ((eq shader-type :geometry-shader) (setf (geometry-shader program) shader-path))
-        ((eq shader-type :fragment-shader) (setf (fragment-shader program) shader-path))
-        ((eq shader-type :compute-shader) (setf (compute-shader program) shader-path))))
-
-(flet ((get-log (get-log-function id name)
-         (let ((log (funcall get-log-function id)))
-           (if (> (length log) 0)
-               (format t "~A reports: ~A~%" name log)))))
-
-  (defun get-compile-errors (shader-id)
-    (get-log #'gl:get-shader-info-log shader-id "Shader"))
-
-  (defun get-link-errors (program-id)
-    (get-log #'gl:get-program-info-log program-id "Program")))
-
 (defun load-shader-from-file (source)
   (let ((shader-lines nil))
     (with-open-file (shader-file
@@ -73,8 +53,21 @@
         (setf shader-lines (cons line shader-lines))))
       (reverse shader-lines)))
 
+(flet ((get-log (get-log-function id name)
+         (let ((log (funcall get-log-function id)))
+           (if (> (length log) 0)
+               (format t "~A reports: ~A~%" name log)))))
+  (defun get-compile-errors (shader-id)
+    (get-log #'gl:get-shader-info-log shader-id "Shader"))
+  (defun get-link-errors (program-id)
+    (get-log #'gl:get-program-info-log program-id "Program")))
+
 (defun shader-loadedp (program type)
   (slot-value program type))
+
+(defmacro set-shader (program shader-path shader-type)
+  (let ((accessor (intern (symbol-name shader-type) "SHADER")))
+    `(setf (funcall #',accessor ,program) ,shader-path)))
 
 (defun compile-program (program)
   (setf (program-id program) (gl:create-program))
