@@ -50,7 +50,8 @@
       (do ((line (read-line shader-file nil)
                  (read-line shader-file nil)))
           ((null line))
-        (setf shader-lines (cons line shader-lines))))
+        (setf shader-lines (cons (format nil "~a~%" line)
+                                 shader-lines))))
       (reverse shader-lines)))
 
 (flet ((get-log (get-log-function id name)
