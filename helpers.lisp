@@ -6,3 +6,6 @@
 
 (defun make-keyword (name)
   (values (intern (string-upcase name) "KEYWORD")))
+
+(defmacro make-regular-symbol (symbol-name package-name)
+  `(values (intern (string-upcase ,symbol-name) ,package-name)))

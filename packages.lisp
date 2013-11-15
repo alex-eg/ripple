@@ -6,6 +6,7 @@
 (defpackage :helpers
   (:use :cl)
   (:export :radians
+           :make-regular-symbol
            :make-keyword))
 
 (defpackage :v ; vectors
