@@ -62,31 +62,29 @@
   (defun get-link-errors (program-id)
     (get-log #'gl:get-program-info-log program-id "Program")))
 
-(defun shader-loadedp (program type)
-  (slot-value program type))
-
 (defmacro set-shader (program shader-path shader-type)
-  (let ((accessor (intern (symbol-name shader-type) "SHADER")))
-    `(setf (funcall #',accessor ,program) ,shader-path)))
+  `(setf (slot-value ,program 
+                     (intern (string-upcase (symbol-name ,shader-type))
+                             "SHADER"))
+         ,shader-path))
 
 (defun compile-program (program)
   (setf (program-id program) (gl:create-program))
-  (let ((shader-type-list '(vertex-shader
-                            tess-control-shader
-                            tess-evaluation-shader
-                            geometry-shader
-                            fragment-shader
-                            compute-shader))
+  (let ((shader-type-list '("vertex-shader"
+                            "tess-control-shader"
+                            "tess-evaluation-shader"
+                            "geometry-shader"
+                            "fragment-shader"
+                            "compute-shader"))
         (attached-shaders '()))
-    (labels ((load-and-compile-shader (program type)
-               (let* ((shader-type-list '((vertex-shader . :vertex-shader)
-                                          (tess-control-shader . :tess-control-shader)
-                                          (geometry-shader . :geometry-shader)
-                                          (fragment-shader . :fragment-shader)
-                                          (compute-shader . :compute-shader)))
-                      (shader-id (gl:create-shader (cdr (assoc type shader-type-list))))
+    (labels ((shader-loaded? (program type)
+               (slot-value program (make-regular-symbol type "SHADER")))
+             (load-and-compile-shader (program type)
+               (let* ((shader-id (gl:create-shader (make-keyword type)))
                       (program-id (program-id program))
-                      (shader-path (slot-value program type))
+                      (shader-path (slot-value
+                                    program
+                                    (make-regular-symbol type "SHADER")))
                       (shader-source (load-shader-from-file
                                       shader-path)))
                  (gl:attach-shader program-id shader-id)
@@ -96,7 +94,7 @@
                  (setf attached-shaders
                        (append attached-shaders (list shader-id))))))
       (mapcar (lambda (type)
-                (if (shader-loadedp program type)
+                (if (shader-loaded? program type)
                     (load-and-compile-shader program type)))
               shader-type-list)
       (gl:link-program (program-id program))
