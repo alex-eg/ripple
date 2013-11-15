@@ -72,6 +72,10 @@
       ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
       (setf cl-opengl-bindings:*gl-get-proc-address*
             #'sdl-cffi::sdl-gl-get-proc-address)
+
+      (format t "OpenGL version string: ~a~%" (gl:gl-version))
+      (format t "GLSL version string: ~a~%" (gl:glsl-version))
+      
       (cl-glut:init)
       (gl:enable :texture-2d)
       (gl:enable :depth-test)
