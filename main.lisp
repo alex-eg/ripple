@@ -88,7 +88,6 @@
         (gl:tex-parameter :texture-2d :texture-wrap-r :repeat)
         (gl:tex-parameter :texture-2d :texture-min-filter :linear)
         (gl:tex-parameter :texture-2d :texture-mag-filter :linear)
-        (format t "Loading texture~%")
         (gl:tex-image-2d :texture-2d 0 
                          (texture:tex-type tex)
                          (texture:tex-width tex)
@@ -97,12 +96,10 @@
                          (texture:tex-type tex)
                          :unsigned-byte
                          (texture:tex-data tex)))
-      (format t "Loaded texture~%")
 
       ;;Creating VAO
       (setf (state:state-vao cur-state) (gl:gen-vertex-array))
       (gl:bind-vertex-array (state:state-vao cur-state))
-
 
       (sdl:with-events ()
         (:key-down-event
