@@ -1,4 +1,4 @@
-#version 140 core
+#version 140
 
 uniform Transformation {
     mat4 projection;
