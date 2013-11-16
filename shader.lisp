@@ -58,9 +58,13 @@
          (let ((log (funcall get-log-function id)))
            (if (> (length log) 0)
                (format t "~A reports:~%~A~%" name log)))))
-  (defun get-compile-errors (shader-id shader-name)
+  (defun get-compile-errors (shader-id shader-type shader-name)
     (get-log #'gl:get-shader-info-log shader-id 
-             (format nil "Shader ~A" shader-name)))
+             (format nil "~A shader ~A" 
+                     (string-capitalize
+                      (subseq shader-type 0
+                              (position #\- shader-type)))
+                     shader-name)))
   (defun get-link-errors (program-id)
     (get-log #'gl:get-program-info-log program-id "Program")))
 
@@ -92,7 +96,7 @@
                  (gl:attach-shader program-id shader-id)
                  (gl:shader-source shader-id shader-source)
                  (gl:compile-shader shader-id)
-                 (get-compile-errors shader-id shader-path)
+                 (get-compile-errors shader-id type shader-path)
                  (setf attached-shaders
                        (append attached-shaders (list shader-id))))))
       (mapcar (lambda (type)
