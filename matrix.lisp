@@ -187,9 +187,9 @@
       look-at-matrix)))
 
 (defun perspective (fovy aspect z-near z-far)
-  (let ((theta (/ fovy (* 2.0 pi 180.0)))
-        (cot (/ 1.0 (tan th)))
-        (perspective-matrix (mat-4 (identity-matrix))))
+  (let* ((theta (/ fovy (* 2.0 pi 180.0)))
+         (cot (/ 1.0 (tan theta)))
+         (perspective-matrix (mat-4 (identity-matrix))))
     (set-mat-row perspective-matrix 0 (vector (/ cot aspect) 0.0 0.0 0.0))
     (set-mat-row perspective-matrix 1 (vector 0.0 cot 0.0 0.0))
     (set-mat-row perspective-matrix 2 (vector 0.0
