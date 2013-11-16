@@ -12,7 +12,17 @@
     :initform (make-hash-table))
    (texture-pool
     :accessor texture-pool
-    :initforn (make-hash-table))))
+    :initform (make-hash-table))))
+
+(defmacro add (state type name thing)
+  (let* ((slot (cdr
+                (assoc (make-regular-symbol 
+                        (symbol-name type) "STATE")
+                       '((shader . "shader-pool")
+                         (camera . "camera-pool")
+                         (texture . "texture-pool")))))
+         (hash (slot-value state (make-regular-symbol slot "STATE"))))
+    `(setf (gethash ,name ,hash) ,thing)))
 
 (defun use-shader-program (state program-name)
   (let ((shader (gethash program-name (shader-pool state))))

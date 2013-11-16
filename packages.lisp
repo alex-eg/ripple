@@ -80,6 +80,9 @@
            :compile-program))
 
 (defpackage :state
-  (:use :cl)
+  (:use :cl :helpers)
   (:export :state
+           :add
+           :use-shader-program
+           :use-default-program
            :state-vao))
