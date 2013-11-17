@@ -82,7 +82,7 @@
 
       (format t "OpenGL version string: ~a~%" (gl:gl-version))
       (format t "GLSL version string: ~a~%" (gl:glsl-version))
-      
+
       (cl-glut:init)
       (gl:enable :texture-2d)
       (gl:enable :depth-test)
@@ -100,11 +100,11 @@
         (gl:tex-parameter :texture-2d :texture-wrap-r :repeat)
         (gl:tex-parameter :texture-2d :texture-min-filter :linear)
         (gl:tex-parameter :texture-2d :texture-mag-filter :linear)
-        (gl:tex-image-2d :texture-2d 0 
+        (gl:tex-image-2d :texture-2d 0
                          (texture:tex-type tex)
                          (texture:tex-width tex)
                          (texture:tex-height tex)
-                         0 
+                         0
                          (texture:tex-type tex)
                          :unsigned-byte
                          (texture:tex-data tex))
@@ -132,7 +132,6 @@
                      (new-center (v:+ old-center old-view)))
                  (setf (camera:cam-eye cam) new-pos)
                  (setf (camera:cam-center cam) new-center))))
-           
 
            (when (sdl:key= b sdl:sdl-button-wheel-down)
              (camera:with-old-parameters (cam :eye old-eye
@@ -166,10 +165,11 @@
           (:idle ()
                  ;; this lets slime keep working while the main loop is running
                  ;; in sbcl using the :fd-handler swank:*communication-style*
-                 ;; (something similar might help in some other lisps, not sure which though)
+                 ;; (something similar might help in some other lisps, not
+                 ;; sure which though)
                  #+(and sbcl (not sb-thread)) (restartable
                                                 (sb-sys:serve-all-events 0))
-                 (restartable (draw 
+                 (restartable (draw
                                cam
                                texture))))))))
 ;;-----------------------------------------------
