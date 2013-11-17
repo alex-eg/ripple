@@ -83,22 +83,22 @@
                             "fragment-shader"
                             "compute-shader"))
         (attached-shaders '()))
-    (labels ((shader-loaded? (program type)
-               (slot-value program (make-regular-symbol type "SHADER")))
-             (load-and-compile-shader (program type)
-               (let* ((shader-id (gl:create-shader (make-keyword type)))
-                      (program-id (program-id program))
-                      (shader-path (slot-value
-                                    program
-                                    (make-regular-symbol type "SHADER")))
-                      (shader-source (load-shader-from-file
-                                      shader-path)))
-                 (gl:attach-shader program-id shader-id)
-                 (gl:shader-source shader-id shader-source)
-                 (gl:compile-shader shader-id)
-                 (get-compile-errors shader-id type shader-path)
-                 (setf attached-shaders
-                       (append attached-shaders (list shader-id))))))
+    (flet ((shader-loaded? (program type)
+             (slot-value program (make-regular-symbol type "SHADER")))
+           (load-and-compile-shader (program type)
+             (let* ((shader-id (gl:create-shader (make-keyword type)))
+                    (program-id (program-id program))
+                    (shader-path (slot-value
+                                  program
+                                  (make-regular-symbol type "SHADER")))
+                    (shader-source (load-shader-from-file
+                                    shader-path)))
+               (gl:attach-shader program-id shader-id)
+               (gl:shader-source shader-id shader-source)
+               (gl:compile-shader shader-id)
+               (get-compile-errors shader-id type shader-path)
+               (setf attached-shaders
+                     (append attached-shaders (list shader-id))))))
       (mapcar (lambda (type)
                 (if (shader-loaded? program type)
                     (load-and-compile-shader program type)))
