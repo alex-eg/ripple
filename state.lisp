@@ -14,12 +14,16 @@
     :accessor texture-pool
     :initform (make-hash-table))))
 
-(defun get-pool-accessor (type)
-  (cdr (assoc (make-regular-symbol
-               (symbol-name type) "STATE")
-              '((shader . "shader-pool")
-                (camera . "camera-pool")
-                (texture . "texture-pool")))))
+;; When add new resource pools to state class,
+;; don't forget to add them to the list below.
+
+(let ((resource-pools '((:shader . "shader-pool")
+                        (:camera . "camera-pool")
+                        (:texture . "texture-pool"))))
+  (defun get-pool-accessor (type)
+    (cdr (assoc
+          type
+          resource-pools))))
 
 (defmacro get (state type name)
   (setf type (or (and (symbolp type) type)

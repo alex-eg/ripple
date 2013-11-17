@@ -60,15 +60,15 @@
 
 (let ((current-state (make-instance
                       'state:state)))
-  (state:add current-state 'camera "main" 
+  (state:add current-state :camera "main"
              (make-instance 'camera:camera
                             :center #(1.0 0.0 0.0)
                             :eye #(0.0 0.0 0.0)))
-  (state:add current-state 'texture "checker"
+  (state:add current-state :texture "checker"
              (texture:load-from-file
               (make-instance 'texture:texture)
               #P"./resources/textures/checker.tga"))
-  (state:add current-state 'shader "blinn"
+  (state:add current-state :shader "blinn"
              (make-instance 'shader:shader-program))
   (defun main-loop ()
     (sdl:with-init ()
@@ -86,9 +86,9 @@
       (cl-glut:init)
       (gl:enable :texture-2d)
       (gl:enable :depth-test)
-      (let ((blinn (state:get current-state 'shader "blinn"))
-            (tex (state:get current-state 'texture "checker"))
-            (cam (state:get current-state 'camera "main"))
+      (let ((blinn (state:get current-state :shader "blinn"))
+            (tex (state:get current-state :texture "checker"))
+            (cam (state:get current-state :camera "main"))
             (texture (first (gl:gen-textures 1))))
         (shader:set-shader blinn #P"./resources/shaders/light.frag.glsl" :fragment-shader)
         (shader:set-shader blinn #P"./resources/shaders/light.vert.glsl" :vertex-shader)
