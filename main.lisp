@@ -90,8 +90,10 @@
             (tex (state:get current-state :texture "checker"))
             (cam (state:get current-state :camera "main"))
             (texture (first (gl:gen-textures 1))))
-        (shader:set-shader blinn #P"./resources/shaders/light.frag.glsl" :fragment-shader)
-        (shader:set-shader blinn #P"./resources/shaders/light.vert.glsl" :vertex-shader)
+        (shader:set-shader blinn :fragment-shader
+                           #P"./resources/shaders/light.frag.glsl")
+        (shader:set-shader blinn :vertex-shader
+                           #P"./resources/shaders/light.vert.glsl")
         (shader:compile-program blinn)
         (gl:bind-texture :texture-2d texture)
         (gl:tex-parameter :texture-2d :texture-wrap-s :repeat)

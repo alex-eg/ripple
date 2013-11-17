@@ -68,7 +68,7 @@
   (defun get-link-errors (program-id)
     (get-log #'gl:get-program-info-log program-id "Program")))
 
-(defmacro set-shader (program shader-path shader-type)
+(defmacro set-shader (program shader-type shader-path)
   `(setf (slot-value ,program 
                      (intern (string-upcase (symbol-name ,shader-type))
                              "SHADER"))
