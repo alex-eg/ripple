@@ -81,8 +81,10 @@
 
 (defpackage :state
   (:use :cl :helpers)
+  (:shadow cl:get)
   (:export :state
            :add
+           :get
            :use-shader-program
            :use-default-program
            :state-vao))

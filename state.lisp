@@ -14,15 +14,31 @@
     :accessor texture-pool
     :initform (make-hash-table))))
 
+(defun get-pool-accessor (type)
+  (cdr (assoc (make-regular-symbol
+               (symbol-name type) "STATE")
+              '((shader . "shader-pool")
+                (camera . "camera-pool")
+                (texture . "texture-pool")))))
+
+(defmacro get (state type name)
+  (setf type (or (and (symbolp type) type)
+                 (eval type)))
+  (let* ((slot (get-pool-accessor type)))
+    `(gethash ,name
+              (slot-value
+               ,state
+               (make-regular-symbol ,slot "STATE")))))
+
 (defmacro add (state type name thing)
-  (let* ((slot (cdr
-                (assoc (make-regular-symbol 
-                        (symbol-name type) "STATE")
-                       '((shader . "shader-pool")
-                         (camera . "camera-pool")
-                         (texture . "texture-pool")))))
-         (hash (slot-value state (make-regular-symbol slot "STATE"))))
-    `(setf (gethash ,name ,hash) ,thing)))
+  (setf type (or (and (symbolp type) type)
+                 (eval type)))
+  (let* ((slot (get-pool-accessor type)))
+    `(setf (gethash ,name
+                    (slot-value
+                     ,state
+                     (make-regular-symbol ,slot "STATE")))
+           ,thing)))
 
 (defun use-shader-program (state program-name)
   (let ((shader (gethash program-name (shader-pool state))))
