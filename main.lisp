@@ -28,21 +28,24 @@
               (gl:color 0.76 0.0 0.0)
               (gl:vertex i (* (sin i) (cos j)) j)))))
 
-(defun draw (camera texture)
-  "draw a frame"
+(defun draw (state)
   (gl:clear :color-buffer-bit :depth-buffer-bit)
-  (gl:matrix-mode :projection)
-  (gl:load-identity)
-  (gl:matrix-mode :modelview)
-  (gl:load-identity)
-  (camera:update-matrices camera)
-  (gl:translate 15 0.0 15)
-  (cl-glut:wire-sphere 30.0 32 32)
-  (gl:translate -15 0.0 -15)
-  (draw-grid 30 30 0.3)
-  (draw-textured-quad texture)
-  ;; finish the frame
-  (gl:flush)
+  (let* ((blinn (shader:program-id (state:get state :shader "blinn")))
+         (cam (state:get state :camera "main"))
+
+         (light-pos (gl:get-uniform-location blinn "lightPosition"))
+         (light-color (gl:get-uniform-location blinn "lightColor"))
+         (ambient (gl:get-uniform-location blinn "ambient"))
+         (diffuse (gl:get-uniform-location blinn "diffuse"))
+         (specular (gl:get-uniform-location blinn "specular"))
+         (emission (gl:get-uniform-location blinn "emission"))
+         (shininess (gl:get-uniform-location blinn "shininess"))
+
+         (model-view (gl:get-uniform-location blinn "MV"))
+         (projection (gl:get-uniform-location blinn "P")))
+    (camera:update-matrices cam)
+    (gl:uniform-matrix model-view 4 (vector (camera:cam-model-view-matrix cam)))
+    (gl:uniform-matrix projection 4 (vector (camera:cam-projection-matrix cam))))
   (sdl:update-display))
 
 (defun draw-textured-quad (texture)
@@ -83,33 +86,18 @@
       (format t "OpenGL version string: ~a~%" (gl:gl-version))
       (format t "GLSL version string: ~a~%" (gl:glsl-version))
 
-      (cl-glut:init)
-      (gl:enable :texture-2d)
       (gl:enable :depth-test)
       (let ((blinn (state:get current-state :shader "blinn"))
-            (tex (state:get current-state :texture "checker"))
-            (cam (state:get current-state :camera "main"))
-            (texture (first (gl:gen-textures 1))))
+            (cam (state:get current-state :camera "main")))
         (shader:set-shader blinn :fragment-shader
                            #P"./resources/shaders/light.frag.glsl")
         (shader:set-shader blinn :vertex-shader
                            #P"./resources/shaders/light.vert.glsl")
         (shader:compile-program blinn)
-        (gl:bind-texture :texture-2d texture)
-        (gl:tex-parameter :texture-2d :texture-wrap-s :repeat)
-        (gl:tex-parameter :texture-2d :texture-wrap-r :repeat)
-        (gl:tex-parameter :texture-2d :texture-min-filter :linear)
-        (gl:tex-parameter :texture-2d :texture-mag-filter :linear)
-        (gl:tex-image-2d :texture-2d 0
-                         (texture:tex-type tex)
-                         (texture:tex-width tex)
-                         (texture:tex-height tex)
-                         0
-                         (texture:tex-type tex)
-                         :unsigned-byte
-                         (texture:tex-data tex))
+        (gl:use-program (shader:program-id blinn))
+        (format t "Using program error: ~A~%" (gl:get-error))
 
-      ;;Creating VAO
+        ;;Creating VAO
         (setf (state:state-vao current-state) (gl:gen-vertex-array))
         (gl:bind-vertex-array (state:state-vao current-state))
 
@@ -170,7 +158,6 @@
                  #+(and sbcl (not sb-thread)) (restartable
                                                 (sb-sys:serve-all-events 0))
                  (restartable (draw
-                               cam
-                               texture))))))))
+                               current-state))))))))
 ;;-----------------------------------------------
 (main-loop)
