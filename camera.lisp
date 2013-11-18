@@ -100,7 +100,9 @@
                        (cam-zfar cam))))
 
 (defmacro with-old-parameters ((cam &key eye center up view) &rest body)
-  "Sets environment with defined old-eye, old-center and old-up variables. It also sets the old-view vector as normalized subtraction of old-center and old-eye vectors"
+  "Sets environment with defined old-eye, old-center and old-up variables.
+It also sets the old-view vector as normalized subtraction of old-center
+and old-eye vectors"
   (let ((binding-list (remove nil
                               (list `(,eye (camera:cam-eye ,cam))
                                     `(,center (camera:cam-center ,cam))
