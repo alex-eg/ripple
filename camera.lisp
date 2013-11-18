@@ -13,6 +13,12 @@
     :accessor cam-center
     :initarg :center
     :initform #(0.0 0.0 1.0))
+   (model-view
+    :accessor cam-model-view-matrix
+    :initarg nil)
+   (projection
+    :accessor cam-projection-matrix
+    :initarg nil)
    (field-of-view-y
     :accessor cam-fovy
     :initarg :fov

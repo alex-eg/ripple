@@ -57,6 +57,8 @@
            :cam-aspect
            :cam-znear
            :cam-zfar
+           :cam-model-view-matrix
+           :cam-projection-matrix
            :update-matrices))
 
 (defpackage :resource
