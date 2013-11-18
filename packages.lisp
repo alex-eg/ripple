@@ -35,6 +35,8 @@
            :+-mat
            :set-mat-row
            :mat-4
+           :look-at
+           :perspective
            :matrix-row
            :coerce-matrix
            :coerce-vector
