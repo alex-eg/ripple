@@ -187,7 +187,7 @@
       look-at-matrix)))
 
 (defun perspective (fovy aspect z-near z-far)
-  (let* ((theta (/ fovy (* 2.0 pi 180.0)))
+  (let* ((theta (coerce (/ fovy (* 2.0 pi 180.0)) 'single-float))
          (cot (/ 1.0 (tan theta)))
          (perspective-matrix (mat-4 (identity-matrix))))
     (set-mat-row perspective-matrix 0 (vector (/ cot aspect) 0.0 0.0 0.0))
@@ -199,3 +199,13 @@
                                               (/ (* 2.0 z-far z-near)
                                                  (- z-near z-far))))
     (set-mat-row perspective-matrix 3 (vector 0.0 0.0 -1.0 0.0))))
+
+(defun flatten (matrix)
+  (let* ((dim (array-dimension matrix 0))
+         (out (make-array dim)))
+    (dotimes (i dim)
+      (setf (svref out i) (make-array dim))
+      (dotimes (j dim)
+        (setf (svref (svref out i) j)
+              (aref matrix i j))))
+    out))

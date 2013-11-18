@@ -40,6 +40,7 @@
            :matrix-row
            :coerce-matrix
            :coerce-vector
+           :flatten
            :matrix-col))
 
 (defpackage :camera
