@@ -4,7 +4,6 @@ in vec3 myNormal;
 in vec4 myVertex;
 in mat4 MVf;
 
-uniform mat4 MV;
 uniform vec4 lightPosition;
 uniform vec4 lightColor;
 
