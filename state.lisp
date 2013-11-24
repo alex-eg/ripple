@@ -56,7 +56,7 @@
   (gl:use-program 0))
 
 (defun render-mesh (state mesh-string-name)
-  (let ((mesh (get state "mesh" mesh-string-name)))
+  (let ((mesh (get state :mesh mesh-string-name)))
     (gl:enable-vertex-attrib-array 0)
     (gl:bind-buffer :array-buffer (mesh:vertex-buffer-id mesh))
     (gl:vertex-attrib-pointer 0 4 :float nil 0 0)
