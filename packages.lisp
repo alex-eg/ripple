@@ -67,6 +67,12 @@
   (:export :resource
            :resource-name))
 
+(defpackage :mesh
+  (:use :cl :helpers)
+  (:export :mesh
+           :vertex-buffer-id
+           :normal-buffer-id))
+
 (defpackage :texture
   (:use :cl :helpers :resource)
   (:export :texture
