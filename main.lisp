@@ -7,27 +7,6 @@
        (progn ,@body)
      (continue () :report "Continue")))
 
-(defun draw-triangle ()
-  (gl:with-primitive :triangles
-    (gl:color 1 1 1)
-    (gl:vertex 0 0 0)
-    (gl:color 0 1 0)
-    (gl:vertex 0.5 1 0)
-    (gl:color 0 0 1)
-    (gl:vertex 1 0 0)))
-
-(defun draw-grid (width length stride)
-  (loop for i from 0 to width by stride do
-       (gl:with-primitive :line-strip
-         (loop for j from 0 to length by stride do
-              (gl:color 0.76 0.0 0.0)
-              (gl:vertex i (* (sin i) (cos j)) j))))
-  (loop for j from 0 to length by stride do
-       (gl:with-primitive :line-strip
-         (loop for i from 0 to width by stride do
-              (gl:color 0.76 0.0 0.0)
-              (gl:vertex i (* (sin i) (cos j)) j)))))
-
 (defun draw (state)
   (gl:clear :color-buffer-bit :depth-buffer-bit)
   (let* ((blinn (shader:program-id (state:get state :shader "blinn")))
@@ -46,20 +25,9 @@
     (camera:update-matrices cam)
     (gl:uniform-matrix model-view 4 (vector (camera:cam-model-view-matrix cam)))
     (gl:uniform-matrix projection 4 (vector (camera:cam-projection-matrix cam))))
-  (sdl:update-display))
 
-(defun draw-textured-quad (texture)
-  (gl:bind-texture :texture-2d texture)
-  (gl:color 1.0 1.0 1.0)
-  (gl:with-primitive :quads
-    (gl:tex-coord 0.0 0.0)
-    (gl:vertex 10.0 -5.0 -5.0)
-    (gl:tex-coord 4.0 0.0)
-    (gl:vertex 10.0 -5.0 5.0)
-    (gl:tex-coord 4.0 4.0)
-    (gl:vertex 10.0 5.0 5.0)
-    (gl:tex-coord 0.0 4.0)
-    (gl:vertex 10.0 5.0 -5.0)))
+  (state:render-mesh state "triangle")
+  (sdl:update-display))
 
 (let ((current-state (make-instance
                       'state:state)))
