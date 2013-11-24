@@ -60,5 +60,5 @@ void main (void)
 
     finalcolor += (ambient + emission);
     fragmentColor = finalcolor;
-    // fragmentColor = vec4(.5, .3, .2, 1.0);
+    fragmentColor = vec4(.7, .1, .5, 1.0);
 }
