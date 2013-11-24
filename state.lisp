@@ -10,6 +10,9 @@
    (camera-pool
     :accessor camera-pool
     :initform (make-hash-table))
+   (mesh-pool
+    :accessor mesh-pool
+    :initform (make-hash-table))
    (texture-pool
     :accessor texture-pool
     :initform (make-hash-table))))
@@ -19,6 +22,7 @@
 
 (let ((resource-pools '((:shader . "shader-pool")
                         (:camera . "camera-pool")
+                        (:mesh . "mesh-pool")
                         (:texture . "texture-pool"))))
   (defun get-pool-accessor (type)
     (cdr (assoc
