@@ -71,7 +71,9 @@
   (:use :cl :helpers)
   (:export :mesh
            :vertex-buffer-id
-           :normal-buffer-id))
+           :normal-buffer-id
+           :verts-count
+           :load-mesh))
 
 (defpackage :texture
   (:use :cl :helpers :resource)

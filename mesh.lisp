@@ -6,7 +6,10 @@
     :accessor vertex-buffer-id)
    (normal-buffer-id
     :initform nil
-    :accessor normal-buffer-id)))
+    :accessor normal-buffer-id)
+   (verts-count
+    :initform 0
+    :accessor verts-count)))
 
 (defun load-mesh (mesh vertex-vector normal-vector)
   (setf (vertex-buffer-id mesh) (gl:gen-buffers 1))
