@@ -66,9 +66,12 @@
     ;; normalized? _______________________|  | |
     ;; stride _______________________________| |
     ;; array buffer offset ____________________|
+
     (gl:enable-vertex-attrib-array 1)
     (gl:bind-buffer :array-buffer (mesh:normal-buffer-id mesh))
     (gl:vertex-attrib-pointer 1 3 :float nil 0 0)
+
+    (gl:draw-arrays :triangles 0 (mesh:verts-count mesh))
 
     (gl:disable-vertex-attrib-array 0)
     (gl:disable-vertex-attrib-array 1)))
