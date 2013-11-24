@@ -41,6 +41,10 @@
               #P"./resources/textures/checker.tga"))
   (state:add current-state :shader "blinn"
              (make-instance 'shader:shader-program))
+
+  (state:add current-state :mesh "triangle"
+             (make-instance 'mesh:mesh))
+
   (defun main-loop ()
     (sdl:with-init ()
       (sdl:window 800 600
@@ -68,6 +72,14 @@
         ;;Creating VAO
         (setf (state:state-vao current-state) (gl:gen-vertex-array))
         (gl:bind-vertex-array (state:state-vao current-state))
+
+        (mesh:load-mesh (state:get current-state :mesh "triangle")
+                        '(#(3.0 1.0 0.0)
+                          #(3.0 -1.0 0.0)
+                          #(3.0 0.0 1.0))
+                        '(#(-1.0 1.0 1.0)
+                          #(1.0 -1.0 1.0)
+                          #(1.0 1.0 -1.0)))
 
         (sdl:with-events ()
           (:key-down-event
