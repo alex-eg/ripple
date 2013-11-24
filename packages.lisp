@@ -98,4 +98,5 @@
            :get
            :use-shader-program
            :use-default-program
+           :render-mesh
            :state-vao))

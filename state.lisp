@@ -54,3 +54,21 @@
 
 (defun use-default-program ()
   (gl:use-program 0))
+
+(defun render-mesh (state mesh-string-name)
+  (let ((mesh (get state "mesh" mesh-string-name)))
+    (gl:enable-vertex-attrib-array 0)
+    (gl:bind-buffer :array-buffer (mesh:vertex-buffer-id mesh))
+    (gl:vertex-attrib-pointer 0 4 :float nil 0 0)
+    ;; layout in shader ______| |    |    |  | |
+    ;; size ____________________|    |    |  | |
+    ;; type _________________________|    |  | |
+    ;; normalized? _______________________|  | |
+    ;; stride _______________________________| |
+    ;; array buffer offset ____________________|
+    (gl:enable-vertex-attrib-array 1)
+    (gl:bind-buffer :array-buffer (mesh:normal-buffer-id mesh))
+    (gl:vertex-attrib-pointer 1 3 :float nil 0 0)
+
+    (gl:disable-vertex-attrib-array 0)
+    (gl:disable-vertex-attrib-array 1)))
