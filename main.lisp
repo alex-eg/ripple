@@ -67,7 +67,6 @@
                            #P"./resources/shaders/light.vert.glsl")
         (shader:compile-program blinn)
         (gl:use-program (shader:program-id blinn))
-        (format t "Using program error: ~A~%" (gl:get-error))
 
         ;;Creating VAO
         (setf (state:state-vao current-state) (gl:gen-vertex-array))
