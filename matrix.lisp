@@ -198,7 +198,8 @@
                                                  (- z-near z-far))
                                               (/ (* 2.0 z-far z-near)
                                                  (- z-near z-far))))
-    (set-mat-row perspective-matrix 3 (vector 0.0 0.0 -1.0 0.0))))
+    (set-mat-row perspective-matrix 3 (vector 0.0 0.0 -1.0 0.0))
+    perspective-matrix))
 
 (defun flatten (matrix)
   (let* ((dim (array-dimension matrix 0))
