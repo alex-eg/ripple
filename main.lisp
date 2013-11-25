@@ -33,7 +33,8 @@
                       'state:state)))
   (state:add current-state :camera "main"
              (make-instance 'camera:camera
-                            :center #(1.0 0.0 0.0)
+                            :up #(0.0 -1.0 0.0)
+                            :center #(0.0 0.0 1.0)
                             :eye #(0.0 0.0 0.0)))
   (state:add current-state :texture "checker"
              (texture:load-from-file
