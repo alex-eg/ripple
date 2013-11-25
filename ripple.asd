@@ -15,6 +15,7 @@
                (:file "resource")
                (:file "texture")
                (:file "shader")
+               (:file "mesh")
                (:file "state")
                (:file "main"))
   :depends-on (:cl-opengl
