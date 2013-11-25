@@ -74,9 +74,9 @@
         (gl:bind-vertex-array (state:state-vao current-state))
 
         (mesh:load-mesh (state:get current-state :mesh "triangle")
-                        '(#(3.0 1.0 0.0)
-                          #(3.0 -1.0 0.0)
-                          #(3.0 0.0 1.0))
+                        '(#( 0.0 -2.0  4.5  1.0)
+                          #( 2.0  2.0  4.5  1.0)
+                          #(-2.0  2.0  4.5  1.0))
                         '(#(-1.0 1.0 1.0)
                           #(1.0 -1.0 1.0)
                           #(1.0 1.0 -1.0)))
