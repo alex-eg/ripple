@@ -75,6 +75,10 @@
            :verts-count
            :load-mesh))
 
+(defpackage :obj-loader
+  (:use :cl :helpers)
+  (:export :load-mesh-from-file))
+
 (defpackage :texture
   (:use :cl :helpers :resource)
   (:export :texture
