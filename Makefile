@@ -3,3 +3,7 @@ clean:
 
 run:
 	sbcl --eval "(asdf:load-system :ripple)" --non-interactive
+
+
+exe:
+	sbcl --load make-exe.lisp --eval "(make-exe)"
