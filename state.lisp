@@ -20,14 +20,13 @@
 ;; When add new resource pools to state class,
 ;; don't forget to add them to the list below.
 
-(let ((resource-pools '((:shader . "shader-pool")
-                        (:camera . "camera-pool")
-                        (:mesh . "mesh-pool")
-                        (:texture . "texture-pool"))))
-  (defun get-pool-accessor (type)
-    (cdr (assoc
-          type
-          resource-pools))))
+(defun get-pool-accessor (type)
+  (cdr (assoc
+        type
+        '((:shader . "shader-pool")
+          (:camera . "camera-pool")
+          (:mesh . "mesh-pool")
+          (:texture . "texture-pool")))))
 
 (defmacro get (state type name)
   (setf type (or (and (symbolp type) type)
