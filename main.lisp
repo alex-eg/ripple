@@ -29,24 +29,23 @@
   (state:render-mesh state "triangle")
   (sdl:update-display))
 
-(let ((current-state (make-instance
-                      'state:state)))
-  (state:add current-state :camera "main"
-             (make-instance 'camera:camera
-                            :up #(0.0 -1.0 0.0)
-                            :center #(0.0 0.0 1.0)
-                            :eye #(0.0 0.0 0.0)))
-  (state:add current-state :texture "checker"
-             (texture:load-from-file
-              (make-instance 'texture:texture)
-              #P"./resources/textures/checker.tga"))
-  (state:add current-state :shader "blinn"
-             (make-instance 'shader:shader-program))
+(defun main-loop ()
+  (let ((current-state (make-instance
+                        'state:state)))
+    (state:add current-state :camera "main"
+               (make-instance 'camera:camera
+                              :up #(0.0 -1.0 0.0)
+                              :center #(0.0 0.0 1.0)
+                              :eye #(0.0 0.0 0.0)))
+    (state:add current-state :texture "checker"
+               (texture:load-from-file
+                (make-instance 'texture:texture)
+                #P"./resources/textures/checker.tga"))
+    (state:add current-state :shader "blinn"
+               (make-instance 'shader:shader-program))
 
-  (state:add current-state :mesh "triangle"
-             (make-instance 'mesh:mesh))
-
-  (defun main-loop ()
+    (state:add current-state :mesh "triangle"
+               (make-instance 'mesh:mesh))
     (sdl:with-init ()
       (sdl:window 800 600
                   :opengl :hw :double-buffer :resizable)
