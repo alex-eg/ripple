@@ -139,4 +139,3 @@
                  (restartable (draw
                                current-state))))))))
 ;;-----------------------------------------------
-(main-loop)
