@@ -41,7 +41,8 @@
   (sdl:update-display))
 
 (defun main-loop ()
-  (let ((current-state (make-instance
+  (let ((*default-pathname-defaults* (asdf:system-source-directory :ripple))
+        (current-state (make-instance
                         'state:state)))
     (state:add current-state :camera "main"
                (make-instance 'camera:camera
