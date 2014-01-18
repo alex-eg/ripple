@@ -1,6 +1,6 @@
 (in-package :mesh)
 
-(defclass mesh (resource:resource)
+(defclass mesh (resource)
   ((vertex-buffer-id
     :initform nil
     :accessor vertex-buffer-id)
