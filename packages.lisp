@@ -96,6 +96,22 @@
            :set-shader
            :compile-program))
 
+(defpackage :light-source
+  (:use :cl :helpers :resource)
+  (:shadow cl:position)
+  (:export :omni
+           :position
+           :color))
+
+(defpackage :material
+  (:use :cl :helpers :resource)
+  (:export :material
+           :ambient
+           :diffuse
+           :specular
+           :emission
+           :shininess))
+
 (defpackage :state
   (:use :cl :helpers)
   (:shadow cl:get)

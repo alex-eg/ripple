@@ -16,6 +16,8 @@
                (:file "texture")
                (:file "shader")
                (:file "mesh")
+               (:file "light-source")
+               (:file "material")
                (:file "obj-loader")
                (:file "state")
                (:file "main"))
