@@ -11,6 +11,8 @@
   (gl:clear :color-buffer-bit :depth-buffer-bit)
   (let* ((blinn (shader:program-id (state:get state :shader "blinn")))
          (cam (state:get state :camera "main"))
+         (steel (state:get state :material "steel"))
+         (omni (state:get state :light-source "omni"))
 
          (light-pos (gl:get-uniform-location blinn "lightPosition"))
          (light-color (gl:get-uniform-location blinn "lightColor"))
@@ -37,6 +39,12 @@
                               :up #(0.0 -1.0 0.0)
                               :center #(0.0 0.0 1.0)
                               :eye #(0.0 0.0 0.0)))
+    (state:add current-state :light-source "omni"
+               (make-instance 'light-source:omni))
+    (state:add current-state :material "steel"
+               (make-instance 'material:material
+                              :emission #(0.0 0.0 0.0 1.0)
+                              :shininess 500.0))
     (state:add current-state :texture "checker"
                (texture:load-from-file
                 (make-instance 'texture:texture)
