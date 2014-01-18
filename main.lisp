@@ -25,8 +25,17 @@
          (model-view (gl:get-uniform-location blinn "MV"))
          (projection (gl:get-uniform-location blinn "P")))
     (camera:update-matrices cam)
+
     (gl:uniform-matrix model-view 4 (vector (camera:cam-model-view-matrix cam)))
-    (gl:uniform-matrix projection 4 (vector (camera:cam-projection-matrix cam))))
+    (gl:uniform-matrix projection 4 (vector (camera:cam-projection-matrix cam)))
+
+    (gl:uniformfv light-pos (light-source:position omni))
+    (gl:uniformfv light-color (light-source:color omni))
+    (gl:uniformfv ambient (material:ambient steel))
+    (gl:uniformfv diffuse (material:diffuse steel))
+    (gl:uniformfv specular (material:specular steel))
+    (gl:uniformfv emission (material:emission steel))
+    (gl:uniformf shininess (material:shininess steel)))
 
   (state:render-mesh state "triangle")
   (sdl:update-display))
