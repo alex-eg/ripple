@@ -68,7 +68,7 @@
            :resource-name))
 
 (defpackage :mesh
-  (:use :cl :helpers)
+  (:use :cl :helpers :resource)
   (:export :mesh
            :vertex-buffer-id
            :normal-buffer-id
