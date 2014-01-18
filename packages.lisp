@@ -46,6 +46,7 @@
 (defpackage :camera
   (:use :cl :helpers)
   (:export :camera
+           :flying-camera
            :cam-eye
            :cam-center
            :cam-up

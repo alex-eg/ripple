@@ -45,7 +45,7 @@
         (current-state (make-instance
                         'state:state)))
     (state:add current-state :camera "main"
-               (make-instance 'camera:camera
+               (make-instance 'camera:flying-camera
                               :up #(0.0 -1.0 0.0)
                               :center #(0.0 0.0 1.0)
                               :eye #(0.0 0.0 0.0)))

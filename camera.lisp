@@ -36,6 +36,8 @@
     :initarg :z-far
     :initform 99.0)))
 
+(defclass flying-camera (camera) nil)
+
 (defmethod cam-view ((cam camera))
   (let ((eye (cam-eye cam))
         (center (cam-center cam)))
@@ -49,13 +51,11 @@
     (format t "Eye: ~A~%Center: ~A~%Up: ~A~%View: ~A~%"
             e c u view)))
 
-(defmethod rotate-yaw ((cam camera) (f float))
+(defmethod rotate-yaw ((cam flying-camera) (f float))
   (let* ((eye (cam-eye cam))
          (view (v:normalize (cam-view cam)))
          (up (cam-up cam))
-
          (rot-matrix (m:rotate up (helpers:radians f)))
-
          (new-eye (v:+ eye
                          (m:coerce-vector
                           (m:*-mat-mat
@@ -63,14 +63,12 @@
                            rot-matrix)))))
     (setf (cam-center cam) new-eye)))
 
-(defmethod rotate-pitch ((cam camera) (f float))
+(defmethod rotate-pitch ((cam flying-camera) (f float))
   (let* ((view (cam-view cam))
          (eye (cam-eye cam))
          (up (cam-up cam))
          (side (v:cross up view))
-
          (rot-matrix (m:rotate side (helpers:radians f)))
-
          (new-view (m:coerce-vector
                     (m:*-mat-mat view rot-matrix)))
          (new-center (v:+ eye new-view))
@@ -78,12 +76,10 @@
     (setf (cam-center cam) new-center)
     (setf (cam-up cam) new-up)))
 
-(defmethod rotate-roll ((cam camera) (f float))
+(defmethod rotate-roll ((cam flying-camera) (f float))
   (let* ((view (cam-view cam))
          (up (cam-up cam))
-
          (rot-matrix (m:rotate view (helpers:radians f)))
-
          (new-up (v:normalize (m:coerce-vector
                                (m:*-mat-mat up rot-matrix)))))
     (setf (cam-up cam) new-up)))
