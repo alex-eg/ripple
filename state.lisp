@@ -23,7 +23,7 @@
     :accessor texture-pool
     :initform (make-hash-table))))
 
-;; When add new resource pools to state class,
+;; When adding new resource pools to state class,
 ;; don't forget to add them to the list below.
 
 (defun get-pool-accessor (type)
