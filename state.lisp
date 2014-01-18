@@ -13,6 +13,12 @@
    (mesh-pool
     :accessor mesh-pool
     :initform (make-hash-table))
+   (material-pool
+    :accessor material-pool
+    :initform (make-hash-table))
+   (light-source-pool
+    :accessor light-source-pool
+    :initform (make-hash-table))
    (texture-pool
     :accessor texture-pool
     :initform (make-hash-table))))
@@ -26,6 +32,8 @@
         '((:shader . "shader-pool")
           (:camera . "camera-pool")
           (:mesh . "mesh-pool")
+          (:material . "material-pool")
+          (:light-source . "light-source-pool")
           (:texture . "texture-pool")))))
 
 (defmacro get (state type name)
