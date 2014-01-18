@@ -26,7 +26,7 @@
 ;; When adding new resource pools to state class,
 ;; don't forget to add them to the list below.
 
-(eval-when (:compile-toplevel)
+(eval-when (:compile-toplevel :load-toplevel)
   (defun get-pool-accessor (type)
     (cdr (assoc
           type
