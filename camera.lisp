@@ -71,6 +71,10 @@
                                (m:*-mat-mat up rot-matrix)))))
     (setf (cam-up cam) new-up)))
 
+(defgeneric rotate-yaw (cam f))
+(defgeneric rotate-pitch (cam f))
+
+;; Flying camera methods
 (defmethod rotate-yaw ((cam flying-camera) (f float))
   (let* ((eye (cam-eye cam))
          (view (v:normalize (cam-view cam)))
