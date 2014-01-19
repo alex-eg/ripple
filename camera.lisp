@@ -100,13 +100,32 @@
     (setf (cam-center cam) new-center)
     (setf (cam-up cam) new-up)))
 
-(defmethod rotate-roll ((cam flying-camera) (f float))
-  (let* ((view (cam-view cam))
+;; View camera methods
+(defmethod rotate-yaw ((cam view-camera) (f float))
+  (let* ((view (v:- (cam-pivot-point cam)
+                    (cam-eye cam)))
          (up (cam-up cam))
-         (rot-matrix (m:rotate view (helpers:radians f)))
-         (new-up (v:normalize (m:coerce-vector
-                               (m:*-mat-mat up rot-matrix)))))
+         (rot-matrix (m:rotate up (helpers:radians f)))
+         (new-eye (v:- (cam-pivot-point cam)
+                       (m:coerce-vector
+                        (m:*-mat-mat
+                         view
+                         rot-matrix)))))
+    (setf (cam-eye cam) new-eye)))
+
+(defmethod rotate-pitch ((cam view-camera) (f float))
+  (let* ((view (v:- (cam-pivot-point cam)
+                    (cam-eye cam)))
+         (up (cam-up cam))
+         (side (v:normalize (v:cross up view)))
+         (rot-matrix (m:rotate side (helpers:radians f)))
+         (new-view (m:coerce-vector
+                    (m:*-mat-mat view rot-matrix)))
+         (new-eye (v:- (cam-pivot-point cam) new-view))
+         (new-up (v:normalize (v:cross new-view side))))
+    (setf (cam-eye cam) new-eye)
     (setf (cam-up cam) new-up)))
+
 
 (defun update-matrices (cam)
   (setf (cam-model-view-matrix cam)
