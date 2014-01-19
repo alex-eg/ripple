@@ -43,12 +43,12 @@
     :initarg :pivot
     :initform #(0.0 0.0 0.0))))
 
-(defmethod cam-view ((cam camera))
+(defun cam-view (cam)
   (let ((eye (cam-eye cam))
         (center (cam-center cam)))
     (v:- center eye)))
 
-(defmethod print-camera-parameters ((cam camera))
+(defun print-camera-parameters (cam)
   (let ((c (cam-center cam))
         (e (cam-eye cam))
         (u (cam-up cam))
