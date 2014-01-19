@@ -80,12 +80,12 @@
          (view (v:normalize (cam-view cam)))
          (up (cam-up cam))
          (rot-matrix (m:rotate up (helpers:radians f)))
-         (new-eye (v:+ eye
+         (new-center (v:+ eye
                          (m:coerce-vector
                           (m:*-mat-mat
                            view
                            rot-matrix)))))
-    (setf (cam-center cam) new-eye)))
+    (setf (cam-center cam) new-center)))
 
 (defmethod rotate-pitch ((cam flying-camera) (f float))
   (let* ((view (cam-view cam))
