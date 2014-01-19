@@ -62,6 +62,15 @@
         (v:normalize (v:+ (cam-eye cam)
                           (cam-view cam)))))
 
+;; Common method
+(defun rotate-roll (cam f)
+  (let* ((view (cam-view cam))
+         (up (cam-up cam))
+         (rot-matrix (m:rotate view (helpers:radians f)))
+         (new-up (v:normalize (m:coerce-vector
+                               (m:*-mat-mat up rot-matrix)))))
+    (setf (cam-up cam) new-up)))
+
 (defmethod rotate-yaw ((cam flying-camera) (f float))
   (let* ((eye (cam-eye cam))
          (view (v:normalize (cam-view cam)))
