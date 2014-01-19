@@ -56,6 +56,12 @@
     (format t "Eye: ~A~%Center: ~A~%Up: ~A~%View: ~A~%"
             e c u view)))
 
+(defmethod initialize-instance :after ((cam view-camera) &key)
+  (setf (cam-pivot-point cam) (cam-center cam))
+  (setf (cam-center cam)
+        (v:normalize (v:+ (cam-eye cam)
+                          (cam-view cam)))))
+
 (defmethod rotate-yaw ((cam flying-camera) (f float))
   (let* ((eye (cam-eye cam))
          (view (v:normalize (cam-view cam)))
