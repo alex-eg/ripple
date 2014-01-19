@@ -47,6 +47,8 @@
   (:use :cl :helpers)
   (:export :camera
            :flying-camera
+           :view-camera
+           :cam-pivot-point
            :cam-eye
            :cam-center
            :cam-up

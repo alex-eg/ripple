@@ -37,6 +37,11 @@
     :initform 99.0)))
 
 (defclass flying-camera (camera) nil)
+(defclass view-camera (camera)
+  ((pivot-point
+    :accessor cam-pivot-point
+    :initarg :pivot
+    :initform #(0.0 0.0 0.0))))
 
 (defmethod cam-view ((cam camera))
   (let ((eye (cam-eye cam))
