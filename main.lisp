@@ -45,10 +45,10 @@
         (current-state (make-instance
                         'state:state)))
     (state:add current-state :camera "main"
-               (make-instance 'camera:flying-camera
+               (make-instance 'camera:view-camera
                               :up #(0.0 -1.0 0.0)
                               :center #(0.0 0.0 1.0)
-                              :eye #(0.0 0.0 0.0)))
+                              :eye #(0.0 0.0 -5.0)))
     (state:add current-state :light-source "omni"
                (make-instance 'light-source:omni))
     (state:add current-state :material "steel"
@@ -91,9 +91,9 @@
         (gl:bind-vertex-array (state:state-vao current-state))
 
         (mesh:load-mesh (state:get current-state :mesh "triangle")
-                        '(#( 0.0 -2.0  4.5  1.0)
-                          #( 2.0  2.0  4.5  1.0)
-                          #(-2.0  2.0  4.5  1.0))
+                        '(#( 0.0 -2.0  1.0  1.0)
+                          #( 2.0  2.0  1.0  1.0)
+                          #(-2.0  2.0  1.0  1.0))
                         '(#(-1.0 1.0 1.0)
                           #(1.0 -1.0 1.0)
                           #(1.0 1.0 -1.0)))
@@ -115,8 +115,8 @@
                                               :view old-view)
                (let ((new-pos (v:+ old-view old-eye))
                      (new-center (v:+ old-center old-view)))
-                 (setf (camera:cam-eye cam) new-pos)
-                 (setf (camera:cam-center cam) new-center))))
+                 (setf (camera:cam-center cam) new-center)
+                 (setf (camera:cam-eye cam) new-pos))))
 
            (when (sdl:key= b sdl:sdl-button-wheel-down)
              (camera:with-old-parameters (cam :eye old-eye
@@ -130,6 +130,7 @@
           (:mouse-motion-event
            (:x-rel dx :y-rel dy)
            (when (sdl:mouse-right-p) ;; rotate view
+             (camera::print-camera-parameters cam)
              (camera:rotate-yaw cam (/ dx -10.0))
              (camera:rotate-pitch cam (/ dy 10.0)))
            (when (sdl:mouse-left-p) ;; move through the field
