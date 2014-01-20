@@ -73,6 +73,8 @@
 
 (defgeneric rotate-yaw (cam f))
 (defgeneric rotate-pitch (cam f))
+(defgeneric move-side (cam dx dy))
+(defgeneric move-forward (cam d))
 
 ;; Flying camera methods
 (defmethod rotate-yaw ((cam flying-camera) (f float))
@@ -100,6 +102,29 @@
     (setf (cam-center cam) new-center)
     (setf (cam-up cam) new-up)))
 
+(defmethod move-forward ((cam flying-camera) (dest float))
+  (with-old-parameters (cam :eye eye
+                            :center center
+                            :view view)
+    (let ((new-eye (v:+ view eye))
+          (new-center (v:+ center view)))
+      (setf (cam-center cam) new-center)
+      (setf (cam-eye cam) new-eye))))
+
+(defmethod move-side ((cam flying-camera) (dx float) (dy float))
+  (with-old-parameters (cam :eye eye
+                            :center center
+                            :up up
+                            :view view)
+    (let* ((dir (vector (v:x view) 0.0 (v:z view)))
+           (strafe (v:cross up view))
+           (d-dir (v:+ (v:*. dir dy)
+                       (v:*. strafe dx)))
+           (new-eye (v:+ eye d-dir))
+           (new-center (v:+ center d-dir)))
+      (setf (camera:cam-eye cam) new-eye)
+      (setf (camera:cam-center cam) new-center))))
+
 ;; View camera methods
 (defmethod rotate-yaw ((cam view-camera) (f float))
   (let* ((view (v:- (cam-pivot-point cam)
@@ -126,6 +151,35 @@
     (setf (cam-eye cam) new-eye)
     (setf (cam-up cam) new-up)))
 
+(defmethod move-forward ((cam view-camera) (dir float))
+  (with-old-parameters (cam :eye eye
+                            :center center
+                            :pivot pivot
+                            :view view)
+    (let* ((d (v:*. (v:normalize (v:- pivot view)) dir))
+           (new-eye (v:+ eye d))
+           (new-pivot (v:+ pivot d))
+           (new-center (v:+ center d)))
+      (setf (cam-eye cam) new-eye)
+      (setf (cam-pivot-point cam) new-pivot)
+      (setf (cam-center cam) new-center))))
+
+(defmethod move-side ((cam view-camera) (dx float) (dy float))
+  (with-old-parameters (cam :eye eye
+                            :center center
+                            :up up
+                            :pivot pivot
+                            :view view)
+    (let* ((dir (vector (v:x view) 0.0 (v:z view)))
+           (strafe (v:cross up view))
+           (d-dir (v:+ (v:*. dir dy)
+                       (v:*. strafe dx)))
+           (new-eye (v:+ eye d-dir))
+           (new-pivot (v:+ pivot d-dir))
+           (new-center (v:+ center d-dir)))
+      (setf (cam-eye cam) new-eye)
+      (setf (cam-pivot-point cam) new-pivot)
+      (setf (cam-center cam) new-center))))
 
 (defun update-matrices (cam)
   (setf (cam-model-view-matrix cam)
