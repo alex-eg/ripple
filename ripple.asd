@@ -23,5 +23,4 @@
                (:file "main"))
   :depends-on (:cl-opengl
                :lispbuilder-sdl
-               :cl-glut
-               :cl-glu))
+               ))
