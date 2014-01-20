@@ -22,5 +22,4 @@
                (:file "state")
                (:file "main"))
   :depends-on (:cl-opengl
-               :lispbuilder-sdl
-               ))
+               :lispbuilder-sdl))
