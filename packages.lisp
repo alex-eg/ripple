@@ -54,6 +54,8 @@
            :cam-up
            :cam-fovy
            :cam-view
+           :move-forward
+           :move-side
            :rotate-yaw
            :rotate-pitch
            :rotate-roll
