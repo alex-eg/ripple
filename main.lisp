@@ -110,44 +110,17 @@
           (:mouse-button-down-event
            (:button b)
            (when (sdl:key= b sdl:sdl-button-wheel-up)
-             (camera:with-old-parameters (cam :eye old-eye
-                                              :center old-center
-                                              :view old-view)
-               (let ((new-pos (v:+ old-view old-eye))
-                     (new-center (v:+ old-center old-view)))
-                 (setf (camera:cam-center cam) new-center)
-                 (setf (camera:cam-eye cam) new-pos))))
-
+             (camera:move-forward cam 1.0))
            (when (sdl:key= b sdl:sdl-button-wheel-down)
-             (camera:with-old-parameters (cam :eye old-eye
-                                              :center old-center
-                                              :view old-view)
-               (let ((new-pos (v:- old-eye old-view))
-                     (new-center (v:- old-center old-view)))
-                 (setf (camera:cam-center cam) new-center)
-                 (setf (camera:cam-eye cam) new-pos)))))
+             (camera:move-forward cam -1.0)))
 
           (:mouse-motion-event
            (:x-rel dx :y-rel dy)
            (when (sdl:mouse-right-p) ;; rotate view
-             (camera::print-camera-parameters cam)
              (camera:rotate-yaw cam (/ dx -10.0))
              (camera:rotate-pitch cam (/ dy 10.0)))
            (when (sdl:mouse-left-p) ;; move through the field
-             (camera:with-old-parameters (cam :eye eye
-                                              :center center
-                                              :up up
-                                              :view view)
-               (let* ((old-dir (vector (v:x view) 0.0 (v:z view)))
-                      (strafe (v:cross up view))
-                      (d-dir (v:+ (v:*. old-dir (/ dy 10))
-                                  (v:*. strafe (/ dx 10))))
-
-                      (new-eye (v:+ eye d-dir))
-                      (new-center (v:+ center d-dir)))
-
-                 (setf (camera:cam-eye cam) new-eye)
-                 (setf (camera:cam-center cam) new-center)))))
+             (camera:move-side cam (/ dx 100.0) (/ dy 100.0))))
           (:idle ()
                  ;; this lets slime keep working while the main loop is running
                  ;; in sbcl using the :fd-handler swank:*communication-style*
