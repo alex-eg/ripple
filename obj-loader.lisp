@@ -4,8 +4,9 @@
 
 (defun load-mesh (mesh filename)
   (destructuring-bind (verts normals indices)
-      (load-obj-file filename))
-  (mesh:load-mesh mesh verts normals))
+      (load-obj-file filename)
+    (format t "~A ~A ~A~%" verts normals indices)))
+;    (mesh:load-mesh mesh verts normals)))
 
 (defun load-obj-file (filename)
   (let ((verts nil)
@@ -23,6 +24,6 @@
                   ((string= "v" token)
                    (parse-vertex (read-line s) verts))
                   ((string= "vn" token)
-                   (parse-normal (read-line s) normals)
-                  
-      
+                   (parse-normal (read-line s) normals))
+                  (t (read-line s nil))))))))
+  '(wo lo lo))
