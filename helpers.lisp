@@ -9,3 +9,15 @@
 
 (defmacro make-regular-symbol (symbol-name package-name)
   `(values (intern (string-upcase ,symbol-name) ,package-name)))
+
+(defmacro delimited-read (raw-stream delimiter)
+  (let ((char (gensym))
+        (token (gensym))
+        (stream (eval raw-stream)))    
+    `(with-output-to-string (,token)
+       (do ((,char (read-char ,stream)
+                   (read-char ,stream)))
+           ((char= ,char ,delimiter))
+         (princ ,char ,token)))))
+       
+       

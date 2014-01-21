@@ -7,6 +7,7 @@
   (:use :cl)
   (:export :radians
            :make-regular-symbol
+           :delimited-read
            :make-keyword))
 
 (defpackage :v ; vectors
