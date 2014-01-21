@@ -13,11 +13,13 @@
 (defmacro delimited-read (raw-stream delimiter)
   (let ((char (gensym))
         (token (gensym))
-        (stream (eval raw-stream)))    
+        (stream (or (and (atom raw-stream) raw-stream)
+                    (eval raw-stream))))
     `(with-output-to-string (,token)
-       (do ((,char (read-char ,stream)
-                   (read-char ,stream)))
-           ((char= ,char ,delimiter))
+       (do ((,char (read-char ,stream nil :eof)
+                   (read-char ,stream nil :eof)))
+           ((or (eql ,char :eof)
+                (char= ,char ,delimiter)))
          (princ ,char ,token)))))
        
        
