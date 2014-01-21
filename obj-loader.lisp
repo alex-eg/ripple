@@ -25,3 +25,12 @@
                    (parse-normal (read-line s) normals))
                   (t (read-line s nil))))))))
   '(wo lo lo))
+
+(defun parse-face (line normals verts)
+  (format t "FACE ~A~%" line))
+
+(defun parse-vertex (line verts)
+  (format t "VERT ~A~%" line))
+
+(defun parse-normal (line normals)
+  (format t "NORMAL ~A~%" line))
