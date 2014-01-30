@@ -21,7 +21,7 @@
     (dotimes (i (length vertex-list))
       (dotimes (j elt-len)
         (setf (gl:glaref arr (+ (* i elt-len) j))
-              (svref (elt vertex-list i) j))))
+              (aref (elt vertex-list i) j))))
     (gl:buffer-data :array-buffer :static-draw arr))
 
   (setf (normal-buffer-id mesh) (car (gl:gen-buffers 1)))
@@ -32,5 +32,5 @@
     (dotimes (i (length normal-list))
       (dotimes (j elt-len)
         (setf (gl:glaref arr (+ (* i elt-len) j))
-              (svref (elt normal-list i) j))))
+              (aref (elt normal-list i) j))))
     (gl:buffer-data :array-buffer :static-draw arr)))
