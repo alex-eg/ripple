@@ -45,7 +45,7 @@
 (defun parse-face (line)
   (labels ((add-to-list (value-string lst)
              (if (string-not-equal "" value-string)
-                 (cons (read-from-string value-string) lst)))
+                 (cons (1- (read-from-string value-string)) lst)))
            (parse-point (lists point)
              (mapcar #'add-to-list
                      (cl-utilities:split-sequence #\/ point)
