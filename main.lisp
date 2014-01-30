@@ -37,7 +37,7 @@
     (gl:uniformfv emission (material:emission steel))
     (gl:uniformf shininess (material:shininess steel)))
 
-  (state:render-mesh state 'triangle)
+  (state:render-mesh state 'suzanne)
   (sdl:update-display))
 
 (defun main-loop ()
@@ -63,6 +63,8 @@
                (make-instance 'shader:shader-program))
 
     (state:add current-state :mesh 'triangle
+               (make-instance 'mesh:mesh))
+    (state:add current-state :mesh 'suzanne
                (make-instance 'mesh:mesh))
     (sdl:with-init ()
       (sdl:window 800 600
@@ -99,6 +101,8 @@
                           #(1.0 -1.0 1.0)
                           #(1.0 1.0 -1.0)))
 
+        (obj-loader:load-mesh-from-file (state:get current-state :mesh 'suzanne)
+                                        #P"./resources/models/suzanne.obj")
         (sdl:with-events ()
           (:key-down-event
            (:key key)
