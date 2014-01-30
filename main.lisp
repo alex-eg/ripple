@@ -50,9 +50,14 @@
                               :center #(0.0 0.0 1.0)
                               :eye #(0.0 0.0 -5.0)))
     (state:add current-state :light-source 'omni
-               (make-instance 'light-source:omni))
+               (make-instance 'light-source:omni
+                              :position #(15.0 15.0 15.0 1.0)
+                              :color #(0.7 0.7 0.7 1.0)))
     (state:add current-state :material 'steel
                (make-instance 'material:material
+                              :ambient #(0.1 0.1 0.1 1.0)
+                              :diffuse #(0.3 0.5 0.8 1.0)
+                              :specular #(1.0 1.0 1.0 1.0)
                               :emission #(0.0 0.0 0.0 1.0)
                               :shininess 500.0))
     (state:add current-state :texture 'checker
@@ -79,7 +84,7 @@
       (format t "GLSL version string: ~a~%" (gl:glsl-version))
 
       (gl:enable :depth-test)
-      (gl:clear-color 0.0 0.77 0.87 1.0)
+      (gl:clear-color 0.0 0.27 0.37 1.0)
       (let ((blinn (state:get current-state :shader 'blinn))
             (cam (state:get current-state :camera 'main)))
         (shader:set-shader blinn :fragment-shader
