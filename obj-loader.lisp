@@ -69,5 +69,13 @@
                                :initial-element 1.0)))))
 
 (defun parse-normal (line)
-  "Format is the same!"
-  (parse-vertex line))
+  (cdr
+   (reduce (lambda (num-vert coord)
+             (let ((num (car num-vert))
+                   (vert (cdr num-vert)))
+               (setf (aref vert num)
+                     (read-from-string coord))
+               (cons (1+ num) vert)))
+           (cl-utilities:split-sequence #\Space line)
+           :initial-value
+           (cons 0 (make-array '(3) :element-type 'single-float)))))
