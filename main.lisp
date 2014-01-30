@@ -9,10 +9,10 @@
 
 (defun draw (state)
   (gl:clear :color-buffer-bit :depth-buffer-bit)
-  (let* ((blinn (shader:program-id (state:get state :shader "blinn")))
-         (cam (state:get state :camera "main"))
-         (steel (state:get state :material "steel"))
-         (omni (state:get state :light-source "omni"))
+  (let* ((blinn (shader:program-id (state:get state :shader 'blinn)))
+         (cam (state:get state :camera 'main))
+         (steel (state:get state :material 'steel))
+         (omni (state:get state :light-source 'omni))
 
          (light-pos (gl:get-uniform-location blinn "lightPosition"))
          (light-color (gl:get-uniform-location blinn "lightColor"))
@@ -37,32 +37,32 @@
     (gl:uniformfv emission (material:emission steel))
     (gl:uniformf shininess (material:shininess steel)))
 
-  (state:render-mesh state "triangle")
+  (state:render-mesh state 'triangle)
   (sdl:update-display))
 
 (defun main-loop ()
   (let ((*default-pathname-defaults* (asdf:system-source-directory :ripple))
         (current-state (make-instance
                         'state:state)))
-    (state:add current-state :camera "main"
+    (state:add current-state :camera 'main
                (make-instance 'camera:view-camera
                               :up #(0.0 -1.0 0.0)
                               :center #(0.0 0.0 1.0)
                               :eye #(0.0 0.0 -5.0)))
-    (state:add current-state :light-source "omni"
+    (state:add current-state :light-source 'omni
                (make-instance 'light-source:omni))
-    (state:add current-state :material "steel"
+    (state:add current-state :material 'steel
                (make-instance 'material:material
                               :emission #(0.0 0.0 0.0 1.0)
                               :shininess 500.0))
-    (state:add current-state :texture "checker"
+    (state:add current-state :texture 'checker
                (texture:load-from-file
                 (make-instance 'texture:texture)
                 #P"./resources/textures/checker.tga"))
-    (state:add current-state :shader "blinn"
+    (state:add current-state :shader 'blinn
                (make-instance 'shader:shader-program))
 
-    (state:add current-state :mesh "triangle"
+    (state:add current-state :mesh 'triangle
                (make-instance 'mesh:mesh))
     (sdl:with-init ()
       (sdl:window 800 600
@@ -77,8 +77,9 @@
       (format t "GLSL version string: ~a~%" (gl:glsl-version))
 
       (gl:enable :depth-test)
-      (let ((blinn (state:get current-state :shader "blinn"))
-            (cam (state:get current-state :camera "main")))
+      (gl:clear-color 0.0 0.77 0.87 1.0)
+      (let ((blinn (state:get current-state :shader 'blinn))
+            (cam (state:get current-state :camera 'main)))
         (shader:set-shader blinn :fragment-shader
                            #P"./resources/shaders/light.frag.glsl")
         (shader:set-shader blinn :vertex-shader
@@ -90,7 +91,7 @@
         (setf (state:state-vao current-state) (gl:gen-vertex-array))
         (gl:bind-vertex-array (state:state-vao current-state))
 
-        (mesh:load-mesh (state:get current-state :mesh "triangle")
+        (mesh:load-mesh (state:get current-state :mesh 'triangle)
                         '(#( 0.0 -2.0  1.0  1.0)
                           #( 2.0  2.0  1.0  1.0)
                           #(-2.0  2.0  1.0  1.0))
