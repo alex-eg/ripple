@@ -2,11 +2,15 @@
 
 "http://www.fileformat.info/format/wavefrontobj/egff.htm"
 
-(defun load-mesh (mesh filename)
-  (destructuring-bind (verts normals indices)
+(defun load-mesh-from-file (mesh filename)
+  (destructuring-bind (raw-verts raw-normals vert-index tex-index normal-index)
       (load-obj-file filename)
-    (format t "~A ~A ~A~%" verts normals indices)))
-;    (mesh:load-mesh mesh verts normals)))
+    (let ((verts nil)
+          (normals nil))
+      (dotimes (i (length vert-index))
+        (setf verts (cons (nth (nth i vert-index) raw-verts) verts))
+        (setf normals (cons (nth (nth i normal-index) raw-normals) normals)))
+      (mesh:load-mesh mesh (reverse verts) (reverse normals)))))
 
 (defun load-obj-file (filename)
   (with-open-file (stream filename)
@@ -14,8 +18,8 @@
 
 (defun raw-load-obj-file (stream verts normals vert-index tex-index normal-index)
   (let ((line (read-line stream nil)))
-    (if (null line) (list verts normals (reverse vert-index)
-                          (reverse tex-index) (reverse normal-index))
+    (if (null line) (list (reverse verts) (reverse normals) vert-index
+                          tex-index normal-index)
         (with-input-from-string (s line)
           (let ((token (make-string 32 :initial-element #\Space)))
             (cl-utilities:read-delimited token s :delimiter #\Space)
