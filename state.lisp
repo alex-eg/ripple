@@ -38,8 +38,8 @@
             (:texture . "texture-pool"))))))
 
 (defmacro get (state type name)
-  (setf type (or (and (symbolp type) type)
-                 (eval type)))
+;  (setf type (or (and (symbolp type) type)
+;                 (eval type)))
   (let* ((slot (get-pool-accessor type)))
     `(gethash ,name
               (slot-value
