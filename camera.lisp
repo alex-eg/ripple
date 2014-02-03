@@ -43,6 +43,21 @@
     :initarg :pivot
     :initform #(0.0 0.0 0.0))))
 
+(defmacro with-old-parameters ((cam &key eye center up view pivot) &rest body)
+  "Sets environment with defined old-eye, old-center and old-up variables.
+It also sets the old-view vector as normalized subtraction of old-center
+and old-eye vectors"
+  (let ((binding-list
+         (remove nil
+                 (list `(,eye (camera:cam-eye ,cam))
+                       `(,center (camera:cam-center ,cam))
+                       `(,up (camera:cam-up ,cam))
+                       `(,pivot (camera:cam-pivot-point ,cam))
+                       `(,view (camera:cam-view ,cam)))
+                 :key #'car)))
+    `(let* ,binding-list
+       (progn ,@body))))
+
 (defun cam-view (cam)
   (let ((eye (cam-eye cam))
         (center (cam-center cam)))
@@ -191,19 +206,3 @@
                        (cam-aspect cam)
                        (cam-znear cam)
                        (cam-zfar cam))))
-
-(eval-when (:load-toplevel)
-  (defmacro with-old-parameters ((cam &key eye center up view pivot) &rest body)
-    "Sets environment with defined old-eye, old-center and old-up variables.
-It also sets the old-view vector as normalized subtraction of old-center
-and old-eye vectors"
-    (let ((binding-list
-           (remove nil
-                   (list `(,eye (camera:cam-eye ,cam))
-                         `(,center (camera:cam-center ,cam))
-                         `(,up (camera:cam-up ,cam))
-                         `(,pivot (camera:cam-pivot-point ,cam))
-                         `(,view (camera:cam-view ,cam)))
-                   :key #'car)))
-      `(let* ,binding-list
-         (progn ,@body)))))
