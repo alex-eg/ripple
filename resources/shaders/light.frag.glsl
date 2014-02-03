@@ -1,4 +1,4 @@
-#version 430 core
+#version 330
 
 in vec3 myNormal;
 in vec4 myVertex;
