@@ -20,6 +20,7 @@
                (:file "material")
                (:file "obj-loader")
                (:file "state")
+               (:file "procedural")
                (:file "main"))
   :depends-on (:cl-opengl
                :lispbuilder-sdl

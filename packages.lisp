@@ -128,3 +128,9 @@
            :use-default-program
            :render-mesh
            :state-vao))
+
+(defpackage :procedural
+  (:use :cl :helpers)
+  (:export :hexagonal-grid
+           :icosahedron))
+  
