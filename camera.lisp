@@ -90,6 +90,7 @@ and old-eye vectors"
 (defgeneric rotate-pitch (cam f))
 (defgeneric move-forward (cam d))
 (defgeneric move-side (cam dx dy))
+(defgeneric move-vertical (cam dx dz))
 
 ;; Flying camera methods
 (defmethod rotate-yaw ((cam flying-camera) (f float))
@@ -134,6 +135,19 @@ and old-eye vectors"
     (let* ((dir (vector (v:x view) 0.0 (v:z view)))
            (strafe (v:cross up view))
            (d-dir (v:+ (v:*. dir dy)
+                       (v:*. strafe dx)))
+           (new-eye (v:+ eye d-dir))
+           (new-center (v:+ center d-dir)))
+      (setf (camera:cam-eye cam) new-eye)
+      (setf (camera:cam-center cam) new-center))))
+
+(defmethod move-vertical ((cam flying-camera) (dx float) (dz float))
+  (with-old-parameters (cam :eye eye
+                            :center center
+                            :up up
+                            :view view)
+    (let* ((strafe (v:cross up view))
+           (d-dir (v:+ (v:*. up dz)
                        (v:*. strafe dx)))
            (new-eye (v:+ eye d-dir))
            (new-center (v:+ center d-dir)))
@@ -188,6 +202,24 @@ and old-eye vectors"
     (let* ((dir (vector (v:x view) 0.0 (v:z view)))
            (strafe (v:cross up view))
            (d-dir (v:+ (v:*. dir dy)
+                       (v:*. strafe dx)))
+           (new-eye (v:+ eye d-dir))
+           (new-pivot (v:+ pivot d-dir))
+           (new-center (v:+ center d-dir)))
+      (setf (cam-eye cam) new-eye)
+      (setf (cam-pivot-point cam) new-pivot)
+      (setf (cam-center cam) new-center))))
+
+(defmethod move-vertical ((cam view-camera) (dx float) (dz float))
+  (with-old-parameters (cam :eye eye
+                            :center center
+                            :up up
+                            :pivot pivot
+                            :view view)
+    (let* ((strafe (v:cross up view))
+           (d-dir (v:+ (v:*. 
+                        (v:make-vector :x 0.0 :y 0.0 :z 1.0)
+                        dz)
                        (v:*. strafe dx)))
            (new-eye (v:+ eye d-dir))
            (new-pivot (v:+ pivot d-dir))

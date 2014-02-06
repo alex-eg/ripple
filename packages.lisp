@@ -58,6 +58,7 @@
            :cam-view
            :move-forward
            :move-side
+           :move-vertical
            :rotate-yaw
            :rotate-pitch
            :rotate-roll

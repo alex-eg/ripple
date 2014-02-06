@@ -130,7 +130,9 @@
              (camera:rotate-yaw cam (/ dx -10.0))
              (camera:rotate-pitch cam (/ dy 10.0)))
            (when (sdl:mouse-left-p) ;; move through the field
-             (camera:move-side cam (/ dx 100.0) (/ dy 100.0))))
+             (if (sdl:get-key-state :sdl-key-lshift)
+               (camera:move-vertical cam (/ dx 100.0) (/ dy 100.0))
+               (camera:move-side cam (/ dx 100.0) (/ dy 100.0)))))
           (:idle ()
                  ;; this lets slime keep working while the main loop is running
                  ;; in sbcl using the :fd-handler swank:*communication-style*
