@@ -4,7 +4,8 @@
 
 (defun load-mesh-from-file (mesh filename)
   (destructuring-bind (raw-verts raw-normals vert-index tex-index normal-index)
-      (load-obj-file filename)
+      (with-open-file (stream filename)
+        (raw-load-obj-file stream nil nil nil nil nil))
     (load-mesh-from-lists mesh raw-verts raw-normals vert-index tex-index normal-index)))
 
 (defun load-mesh-from-lists (mesh raw-verts raw-normals vert-index tex-index normal-index)
@@ -14,10 +15,6 @@
       (setf verts (cons (nth (nth i vert-index) raw-verts) verts))
       (setf normals (cons (nth (nth i normal-index) raw-normals) normals)))
     (mesh:load-mesh mesh (reverse verts) (reverse normals))))
-
-(defun load-obj-file (filename)
-  (with-open-file (stream filename)
-    (raw-load-obj-file stream nil nil nil nil nil)))
 
 (defun raw-load-obj-file (stream verts normals vert-index tex-index normal-index)
   (let ((line (read-line stream nil)))
