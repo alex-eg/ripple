@@ -69,6 +69,8 @@
 
     (state:add current-state :mesh 'triangle
                (make-instance 'mesh:mesh))
+    (state:add current-state :mesh 'hexagon
+               (make-instance 'mesh:mesh))
     (state:add current-state :mesh 'suzanne
                (make-instance 'mesh:mesh))
     (sdl:with-init ()
@@ -108,6 +110,10 @@
 
         (obj-loader:load-mesh-from-file (state:get current-state :mesh 'suzanne)
                                         #P"./resources/models/suzanne.obj")
+;        (destructuring-bind (verts normals vert-index normal-index)
+;            (procedural:hexagonal-grid 0 0 0.5 1.0)
+;          (obj-loader:load-mesh-from-lists (state:get current-state :mesh 'hexagon)
+;                                           verts normals vert-index nil normal-index))
         (sdl:with-events ()
           (:key-down-event
            (:key key)
