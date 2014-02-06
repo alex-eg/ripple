@@ -88,8 +88,8 @@ and old-eye vectors"
 
 (defgeneric rotate-yaw (cam f))
 (defgeneric rotate-pitch (cam f))
-(defgeneric move-side (cam dx dy))
 (defgeneric move-forward (cam d))
+(defgeneric move-side (cam dx dy))
 
 ;; Flying camera methods
 (defmethod rotate-yaw ((cam flying-camera) (f float))
