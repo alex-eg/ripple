@@ -83,7 +83,8 @@
 
 (defpackage :obj-loader
   (:use :cl :helpers)
-  (:export :load-mesh-from-file))
+  (:export :load-mesh-from-file
+           :load-mesh-from-lists))
 
 (defpackage :texture
   (:use :cl :helpers :resource)
