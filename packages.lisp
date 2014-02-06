@@ -16,6 +16,7 @@
   (:export :x
            :y
            :z
+           :make-vector
            :+
            :-
            :*.

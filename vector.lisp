@@ -9,6 +9,9 @@
 (defun z (v)
   (aref v 2))
 
+(defun make-vector (&key (x 1.0) (y 1.0) (z 1.0))
+  (make-array 3 :initial-contents (list x y z)))
+
 (defun + (v1 v2)
   "Sums two vectors"
   (vector
