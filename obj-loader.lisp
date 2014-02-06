@@ -5,9 +5,9 @@
 (defun load-mesh-from-file (mesh filename)
   (destructuring-bind (raw-verts raw-normals vert-index tex-index normal-index)
       (load-obj-file filename)
-    (load-mesh-from-lists raw-verts raw-normals vert-index tex-index normal-index)))
+    (load-mesh-from-lists mesh raw-verts raw-normals vert-index tex-index normal-index)))
 
-(defun load-mesh-from-lists (raw-verts raw-normals vert-index tex-index normal-index)
+(defun load-mesh-from-lists (mesh raw-verts raw-normals vert-index tex-index normal-index)
   (let ((verts nil)
         (normals nil))
     (dotimes (i (length vert-index))
