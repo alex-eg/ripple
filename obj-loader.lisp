@@ -68,7 +68,7 @@
                (cons (1+ num) vert)))
            (cl-utilities:split-sequence #\Space line)
            :initial-value
-           (cons 0 (make-array '(4) :element-type 'single-float
+           (cons 0 (make-array 4 :element-type 'single-float
                                :initial-element 1.0)))))
 
 (defun parse-normal (line)
@@ -81,4 +81,4 @@
                (cons (1+ num) vert)))
            (cl-utilities:split-sequence #\Space line)
            :initial-value
-           (cons 0 (make-array '(3) :element-type 'single-float)))))
+           (cons 0 (make-array 3 :element-type 'single-float)))))
