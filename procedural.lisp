@@ -23,12 +23,13 @@
          (verts
           (mapcar (lambda (x y z)
                     (make-array
-                     '(4)
+                     4
                      :element-type 'single-float
                      :initial-contents (list
                                         (coerce x 'single-float)
                                         (coerce y 'single-float)
-                                        z 1.0)))
+                                        z
+                                        1.0)))
                   (append (car xys) (car xys))
                   (append (cdr xys) (cdr xys))
                   zs)))
