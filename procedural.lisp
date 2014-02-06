@@ -32,5 +32,28 @@
                                         1.0)))
                   (append (car xys) (car xys))
                   (append (cdr xys) (cdr xys))
-                  zs)))
-    `(list ,@verts)))
+                  zs))
+         (normals
+          (append 
+           (loop for i from 0.5 to 5.5
+              with a = (/ PI 3.0)
+              collect (cos (* a i)) into xs
+              collect (sin (* a i)) into ys
+              finally
+                (return
+                  (mapcar (lambda (x y)
+                            (make-array
+                             3
+                             :element-type 'single-float
+                             :initial-contents (list
+                                                (coerce x 'single-float)
+                                                (coerce y 'single-float)
+                                                0.0)))
+                          xs ys)))
+           (list 
+            #(0.0 0.0 1.0)
+            #(0.0 0.0 -1.0)))))
+
+    `(list (list ,@verts) (list ,@normals)
+           '(0 1 2 0 2 3 0 3 4 0 4 5 0 5 6 0 6 1)
+           '(6 6 6 6 6 6))))
