@@ -46,9 +46,9 @@
                         'state:state)))
     (state:add current-state :camera 'main
                (make-instance 'camera:view-camera
-                              :up #(0.0 -1.0 0.0)
-                              :center #(0.0 0.0 1.0)
-                              :eye #(0.0 0.0 -5.0)))
+                              :up #(0.0 0.0 1.0)
+                              :center #(0.0 1.0 0.0)
+                              :eye #(0.0 -5.0 0.0)))
     (state:add current-state :light-source 'omni
                (make-instance 'light-source:omni
                               :position #(15.0 15.0 15.0 1.0)
