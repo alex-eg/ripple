@@ -199,7 +199,7 @@ and old-eye vectors"
                             :up up
                             :pivot pivot
                             :view view)
-    (let* ((dir (vector (v:x view) 0.0 (v:z view)))
+    (let* ((dir (vector (v:x view) (v:y view) 0.0))
            (strafe (v:cross up view))
            (d-dir (v:+ (v:*. dir dy)
                        (v:*. strafe dx)))
