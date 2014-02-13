@@ -34,7 +34,7 @@
                   (append (cdr xys) (cdr xys))
                   zs))
          (normals
-          (append 
+          (append
            (loop for i from 0.5 to 5.5
               with a = (/ PI 3.0)
               collect (cos (* a i)) into xs
@@ -50,23 +50,20 @@
                                                 (coerce y 'single-float)
                                                 0.0)))
                           xs ys)))
-           (list 
+           (list
             #(0.0 0.0 1.0)
             #(0.0 0.0 -1.0)))))
-
-    `(list (list ,@verts) (list ,@normals)
+    `(list ',verts ',normals
            '(0 1 2 0 2 3 0 3 4 0 4 5 0 5 6 0 6 1)
-           '(6 6 6 6 6 6))))
+           '(6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6))))
 
 (defmacro coordinate-frame (size)
-  (let ((x (make-array 
+  (let ((x (make-array
             4
             :initial-contents '(1.0 0.0 0.0 1.0)))
         (y (make-array
-            4 
+            4
             :initial-contents '(0.0 1.0 0.0 1.0)))
         (z (make-array
             4
             :initial-contents '(0.0 0.0 1.0 1.0))))))
-    
-                      
