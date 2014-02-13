@@ -7,6 +7,9 @@
        (progn ,@body)
      (continue () :report "Continue")))
 
+(defvar *rotate-matrix* (m:mat-4 (m:rotate #(1.0 1.0 1.0) 0.157)))
+(defvar *angle* 0.157)
+
 (defun draw (state)
   (gl:clear :color-buffer-bit :depth-buffer-bit)
   (let* ((blinn (shader:program-id (state:get state :shader 'blinn)))
@@ -22,12 +25,18 @@
          (emission (gl:get-uniform-location blinn "emission"))
          (shininess (gl:get-uniform-location blinn "shininess"))
 
+         (rotation (gl:get-uniform-location blinn "rot"))
          (model-view (gl:get-uniform-location blinn "MV"))
          (projection (gl:get-uniform-location blinn "P")))
     (camera:update-matrices cam)
 
     (gl:uniform-matrix model-view 4 (vector (camera:cam-model-view-matrix cam)))
     (gl:uniform-matrix projection 4 (vector (camera:cam-projection-matrix cam)))
+    (gl:uniform-matrix rotation 4 (vector *rotate-matrix*))
+    (setf *rotate-matrix* (m:mat-4 (m:rotate #(1.0 1.0 1.0) *angle*)))
+    (setf *angle* (+ *angle* 0.157))
+    (if (> *angle* (* 2 PI))
+        (setf *angle* (- *angle* (* 2 PI))))
 
     (gl:uniformfv light-pos (light-source:position omni))
     (gl:uniformfv light-color (light-source:color omni))
