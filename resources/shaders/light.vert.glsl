@@ -12,8 +12,8 @@ out vec4 myVertex;
 out mat4 MVf;
 
 void main() {
-    gl_Position = P * MV * rot * vertexPosition;
-    myNormal = vertexNormal;
-    myVertex = vertexPosition;
+    gl_Position = P * MV * (rot * vertexPosition);
+    myNormal = mat3(rot) * vertexNormal;
+    myVertex = rot * vertexPosition;
     MVf = MV;
 }
