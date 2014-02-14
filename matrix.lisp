@@ -141,8 +141,8 @@
                                               :element-type 'single-float
                                               :initial-contents
                                               `((,(* x x) ,(* x y) ,(* x z))
-                                                (,(* x y) ,(* y y) ,(* y z))
-                                                (,(* x z) ,(* z y) ,(* z z)))))
+                                                (,(* y x) ,(* y y) ,(* y z))
+                                                (,(* z x) ,(* z y) ,(* z z)))))
          (second-component (*-mat-num second-component-matrix (- 1 (cos angle))))
          (third-component-matrix (make-array '(3 3)
                                              :element-type 'single-float
