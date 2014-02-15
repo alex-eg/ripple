@@ -129,9 +129,10 @@
             (svref vector i)))
     translate-matrix))
 
-(defun rotate (vector raw-angle)
+(defun rotate (raw-vector raw-angle)
   "Creates rotation matrix."
   (let* ((angle (coerce raw-angle 'single-float))
+         (vector (v:normalize raw-vector))
          (x (v:x vector))
          (y (v:y vector))
          (z (v:z vector))
