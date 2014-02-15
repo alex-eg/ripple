@@ -7,7 +7,7 @@
        (progn ,@body)
      (continue () :report "Continue")))
 
-(defvar *rotate-matrix* (m:mat-4 (m:rotate #(0.0 1.0 0.0) 0.157)))
+(defvar *rotate-matrix* (m:mat-4 (m:rotate #(0.0 1.0 1.0) 0.157)))
 (defvar *angle* 0.157)
 
 (defun draw (state)
@@ -34,7 +34,7 @@
     (gl:uniform-matrix projection 4 (vector (camera:cam-projection-matrix cam)))
     (gl:uniform-matrix rotation 4 (vector *rotate-matrix*))
 
-    (setf *rotate-matrix* (m:mat-4 (m:rotate #(0.0 0.0 1.0) *angle*)))
+    (setf *rotate-matrix* (m:mat-4 (m:rotate #(1.0 1.0 1.0) *angle*)))
     (setf *angle* (+ *angle* 0.0157))
     (if (> *angle* (* 2 PI))
         (setf *angle* (- *angle* (* 2 PI))))
