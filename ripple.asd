@@ -23,5 +23,5 @@
                (:file "procedural")
                (:file "main"))
   :depends-on (:cl-opengl
-               :lispbuilder-sdl
+               :sdl2
                :cl-utilities))

@@ -83,7 +83,7 @@
                (make-instance 'mesh:mesh))
     (state:add current-state :mesh 'suzanne
                (make-instance 'mesh:mesh))
-    (sdl:with-init ()
+    (sdl2:with-init ()
       (sdl:window 800 600
                   :opengl :hw :double-buffer :resizable)
       (sdl:enable-key-repeat 50 20)
