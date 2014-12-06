@@ -1,0 +1,4 @@
+*** Known issues
+
+** sdl2 doesn't work inside slime!
+   Now that's interesting
