@@ -70,8 +70,7 @@
 
 (defmacro set-shader (program shader-type shader-path)
   `(setf (slot-value ,program 
-                     (intern (string-upcase (symbol-name ,shader-type))
-                             "SHADER"))
+                     (import ,shader-type))
          ,shader-path))
 
 (defun compile-program (program)
