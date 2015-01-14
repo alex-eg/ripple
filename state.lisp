@@ -1,4 +1,4 @@
-(in-package :state)
+(in-package :ripple)
 
 (defclass state ()
   ((vao

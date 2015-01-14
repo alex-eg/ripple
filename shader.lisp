@@ -1,4 +1,4 @@
-(in-package :shader)
+(in-package :ripple)
 
 (defclass shader (resource)
   ((filename
@@ -110,3 +110,6 @@
                                   shader-id)
                 (gl:delete-shader shader-id))
               attached-shaders))))
+
+(defun get-uniform-names (gl-program)
+  (list 'foo 'bar))

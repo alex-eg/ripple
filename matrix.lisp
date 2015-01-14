@@ -1,4 +1,4 @@
-(in-package :m)
+(in-package :ripple)
 
 (defun identity-matrix ()
   (make-array '(3 3)
@@ -132,10 +132,10 @@
 (defun rotate (raw-vector raw-angle)
   "Creates rotation matrix."
   (let* ((angle (coerce raw-angle 'single-float))
-         (vector (v:normalize raw-vector))
-         (x (v:x vector))
-         (y (v:y vector))
-         (z (v:z vector))
+         (vector (normalize raw-vector))
+         (x (x vector))
+         (y (y vector))
+         (z (z vector))
 
          (first-component (*-mat-num (identity-matrix) (cos angle)))
          (second-component-matrix (make-array '(3 3)
@@ -177,9 +177,9 @@
                       (aref ,mat ,row 1) (aref ,vec 1)
                       (aref ,mat ,row 2) (aref ,vec 2)
                       (aref ,mat ,row 3) (trans ,vec ,eye))))
-    (let* ((w (v:normalize (v:- eye center)))
-           (u (v:normalize (v:cross up w)))
-           (v (v:normalize (v:cross w u)))
+    (let* ((w (normalize (v- eye center)))
+           (u (normalize (cross up w)))
+           (v (normalize (cross w u)))
            (look-at-matrix (mat-4 (identity-matrix))))
       (setf-row 0 look-at-matrix u eye)
       (setf-row 1 look-at-matrix v eye)

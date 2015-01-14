@@ -1,4 +1,4 @@
-(in-package :procedural)
+(in-package :ripple)
 
 "Special package for macros for generating normal and vertex data"
 

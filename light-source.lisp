@@ -1,4 +1,4 @@
-(in-package :light-source)
+(in-package :ripple)
 
 (defclass omni (resource)
   ((position
@@ -9,4 +9,3 @@
     :accessor color
     :initarg :color
     :initform #(1.0 1.0 1.0 1.0))))
-  

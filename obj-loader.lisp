@@ -1,4 +1,4 @@
-(in-package :obj-loader)
+(in-package :ripple)
 
 "http://www.fileformat.info/format/wavefrontobj/egff.htm"
 

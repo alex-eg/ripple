@@ -1,4 +1,4 @@
-(in-package :v)
+(in-package :ripple)
 
 (defun x (v)
   (aref v 0))
@@ -12,14 +12,14 @@
 (defun make-vector (&key (x 1.0) (y 1.0) (z 1.0))
   (make-array 3 :initial-contents (list x y z)))
 
-(defun + (v1 v2)
+(defun v+ (v1 v2)
   "Sums two vectors"
   (vector
    (cl:+ (x v1) (x v2))
    (cl:+ (y v1) (y v2))
    (cl:+ (z v1) (z v2))))
 
-(defun - (v1 v2)
+(defun v- (v1 v2)
   "Subtracts one vector from another"
   (vector
    (cl:- (x v1) (x v2))

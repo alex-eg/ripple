@@ -1,4 +1,4 @@
-(in-package :material)
+(in-package :ripple)
 
 (defclass material (resource)
   ((ambient

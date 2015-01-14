@@ -1,4 +1,4 @@
-(in-package :helpers)
+(in-package :ripple)
 
 (defun radians (a)
   "Converts degrees to radians"

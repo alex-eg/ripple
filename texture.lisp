@@ -1,6 +1,6 @@
-(in-package :texture)
+(in-package :ripple)
 
-(defclass texture (resource:resource)
+(defclass texture (resource)
   ((data
     :accessor tex-data
     :initarg :data

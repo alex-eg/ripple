@@ -1,4 +1,4 @@
-(in-package :resource)
+(in-package :ripple)
 
 (defclass resource ()
   ((name

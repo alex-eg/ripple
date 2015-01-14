@@ -1,4 +1,4 @@
-(in-package :mesh)
+(in-package :ripple)
 
 (defclass mesh (resource)
   ((vertex-buffer-id
