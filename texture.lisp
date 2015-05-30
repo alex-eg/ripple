@@ -98,7 +98,7 @@ uncompressed types"
                             bytes-per-pixel
                             :element-type '(unsigned-byte 8))))
                (if (< chunk-header 128)
-     ;;; Raw chunk
+                   ;; Raw chunk
                    (progn 
                      (incf chunk-header)
                      (dotimes (count chunk-header)
@@ -113,7 +113,7 @@ uncompressed types"
                                new))
                        (incf current-pixel)
                        (setf current-byte (+ current-byte bytes-per-pixel))))
-     ;;; Else - RLE chunk
+                   ;; Else - RLE chunk
                    (progn
                      (setf chunk-header (- chunk-header 127))
                      (read-sequence buffer stream)
