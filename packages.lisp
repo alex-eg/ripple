@@ -1,14 +1,13 @@
 (in-package :cl-user)
 
-(defpackage :ripple
-  (:use :cl :cl-opengl))
-
 (defpackage :helpers
   (:use :cl)
   (:export :radians
            :make-regular-symbol
            :delimited-read
-           :make-keyword))
+           :make-keyword
+           :mouse-left-p
+           :mouse-right-p))
 
 (defpackage :v ; vectors
   (:use :helpers :cl)
@@ -136,4 +135,7 @@
   (:use :cl :helpers)
   (:export :hexagonal-grid
            :icosahedron))
-  
+
+(defpackage :ripple
+  (:use :cl :cl-opengl :helpers)
+  (:export :main-loop))

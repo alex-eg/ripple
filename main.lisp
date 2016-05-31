@@ -10,7 +10,7 @@
 (defvar *rotate-matrix* (m:mat-4 (m:rotate #(0.0 1.0 1.0) 0.157)))
 (defvar *angle* 0.157)
 
-(defun draw (state)
+(defun draw (state win)
   (gl:clear :color-buffer-bit :depth-buffer-bit)
   (let* ((blinn (shader:program-id (state:get state :shader 'blinn)))
          (cam (state:get state :camera 'main))
@@ -48,7 +48,7 @@
     (gl:uniformf shininess (material:shininess steel)))
 
   (state:render-mesh state 'suzanne)
-  (sdl:update-display))
+  (sdl2:gl-swap-window win))
 
 (defun main-loop ()
   (let ((*default-pathname-defaults* (asdf:system-source-directory :ripple))
@@ -83,78 +83,76 @@
                (make-instance 'mesh:mesh))
     (state:add current-state :mesh 'suzanne
                (make-instance 'mesh:mesh))
-    (sdl:with-init ()
-      (sdl:window 800 600
-                  :opengl :hw :double-buffer :resizable)
-      (sdl:enable-key-repeat 50 20)
-      ;; cl-opengl needs platform specific support to be able to load GL
-      ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
-      (setf cl-opengl-bindings:*gl-get-proc-address*
-            #'sdl-cffi::sdl-gl-get-proc-address)
+    (sdl2:with-init (:video)
+      (sdl2:gl-set-attr :context-major-version 4)
+      (sdl2:gl-set-attr :context-minor-version 1)
+      (sdl2:with-window (win
+                         :w 640 :h 480
+                         :title "Ripple"
+                         :flags '(:opengl))
+        (sdl2:with-gl-context (gl win)
+          ;; cl-opengl needs platform specific support to be able to load GL
+          ;; extensions, so we need to tell it how to do so in lispbuilder-sdl
 
-      (format t "OpenGL version string: ~a~%" (gl:gl-version))
-      (format t "GLSL version string: ~a~%" (gl:glsl-version))
+          (format t "OpenGL version string: ~a~%" (gl:gl-version))
+          (format t "GLSL version string: ~a~%" (gl:glsl-version))
 
-      (gl:enable :depth-test)
-      (gl:clear-color 0.0 0.27 0.37 1.0)
-      (let ((blinn (state:get current-state :shader 'blinn))
-            (cam (state:get current-state :camera 'main)))
-        (shader:set-shader blinn :fragment-shader
-                           #P"./resources/shaders/light.frag.glsl")
-        (shader:set-shader blinn :vertex-shader
-                           #P"./resources/shaders/light.vert.glsl")
-        (shader:compile-program blinn)
-        (gl:use-program (shader:program-id blinn))
+          (gl:enable :depth-test)
+          (gl:clear-color 0.0 0.27 0.37 1.0)
+          (let ((blinn (state:get current-state :shader 'blinn))
+                (cam (state:get current-state :camera 'main)))
+            (shader:set-shader blinn :fragment-shader
+                               #P"./resources/shaders/light.frag.glsl")
+            (shader:set-shader blinn :vertex-shader
+                               #P"./resources/shaders/light.vert.glsl")
+            (shader:compile-program blinn)
+            (gl:use-program (shader:program-id blinn))
 
-        ;;Creating VAO
-        (setf (state:state-vao current-state) (gl:gen-vertex-array))
-        (gl:bind-vertex-array (state:state-vao current-state))
+            ;;Creating VAO
+            (setf (state:state-vao current-state) (gl:gen-vertex-array))
+            (gl:bind-vertex-array (state:state-vao current-state))
 
-        (mesh:load-mesh (state:get current-state :mesh 'triangle)
-                        '(#( 0.0 -2.0  1.0  1.0)
-                          #( 2.0  2.0  1.0  1.0)
-                          #(-2.0  2.0  1.0  1.0))
-                        '(#(-1.0 1.0 1.0)
-                          #(1.0 -1.0 1.0)
-                          #(1.0 1.0 -1.0)))
+            (mesh:load-mesh (state:get current-state :mesh 'triangle)
+                            '(#( 0.0 -2.0  1.0  1.0)
+                              #( 2.0  2.0  1.0  1.0)
+                              #(-2.0  2.0  1.0  1.0))
+                            '(#(-1.0 1.0 1.0)
+                              #(1.0 -1.0 1.0)
+                              #(1.0 1.0 -1.0)))
 
-        (obj-loader:load-mesh-from-file (state:get current-state :mesh 'suzanne)
-                                        #P"./resources/models/suzanne.obj")
-        (destructuring-bind (verts normals vert-index normal-index)
-            (procedural:hexagonal-grid 0 0 0.5 1.0)
-          (obj-loader:load-mesh-from-lists (state:get current-state :mesh 'hexagon)
-                                           verts normals vert-index nil normal-index))
-        (sdl:with-events ()
-          (:key-down-event
-           (:key key)
-           (when (sdl:key= key :sdl-key-q)
-             (camera:rotate-roll cam 1.9))
-           (when (sdl:key= key :sdl-key-e)
-             (camera:rotate-roll cam -1.9)))
+            (obj-loader:load-mesh-from-file (state:get current-state :mesh 'suzanne)
+                                            #P"./resources/models/suzanne.obj")
+            (destructuring-bind (verts normals vert-index normal-index)
+                (procedural:hexagonal-grid 0 0 0.5 1.0)
+              (obj-loader:load-mesh-from-lists (state:get current-state :mesh 'hexagon)
+                                               verts normals vert-index nil normal-index))
+            (sdl2:with-event-loop (:method :poll)
+              (:keydown
+               (:keysym key)
+               (when (sdl2:scancode= key :scancode-q)
+                 (camera:rotate-roll cam 1.9))
+               (when (sdl2:scancode= key :scancode-e)
+                 (camera:rotate-roll cam -1.9)))
 
-          (:quit-event () t)
-          (:mouse-button-down-event
-           (:button b)
-           (when (sdl:key= b sdl:sdl-button-wheel-up)
-             (camera:move-forward cam 1.0))
-           (when (sdl:key= b sdl:sdl-button-wheel-down)
-             (camera:move-forward cam -1.0)))
+              (:quit () t)
+              (:mousewheel
+               (:y y)
+               (camera:move-forward cam (* 3.0 y)))
 
-          (:mouse-motion-event
-           (:x-rel dx :y-rel dy)
-           (when (sdl:mouse-right-p) ;; rotate view
-             (camera:rotate-yaw cam (/ dx -10.0))
-             (camera:rotate-pitch cam (/ dy 10.0)))
-           (when (sdl:mouse-left-p) ;; move through the field
-             (if (sdl:get-key-state :sdl-key-lshift)
-               (camera:move-vertical cam (/ dx 100.0) (/ dy 100.0))
-               (camera:move-side cam (/ dx 100.0) (/ dy 100.0)))))
-          (:idle ()
-                 ;; this lets slime keep working while the main loop is running
-                 ;; in sbcl using the :fd-handler swank:*communication-style*
-                 ;; (something similar might help in some other lisps, not
-                 ;; sure which though)
-                 #+(and sbcl (not sb-thread)) (restartable
-                                                (sb-sys:serve-all-events 0))
-                 (restartable (draw
-                               current-state))))))))
+              (:mousemotion
+               (:xrel dx :yrel dy :state state)
+               (when (mouse-right-p) ;; rotate view
+                 (camera:rotate-yaw cam (/ dx -10.0))
+                 (camera:rotate-pitch cam (/ dy 10.0)))
+               (when (mouse-left-p) ;; move through the field
+                 (if (sdl2:keyboard-state-p :sdl-key-lshift)
+                     (camera:move-vertical cam (/ dx 100.0) (/ dy 100.0))
+                     (camera:move-side cam (/ dx 100.0) (/ dy 100.0)))))
+              (:idle ()
+                     ;; this lets slime keep working while the main loop is running
+                     ;; in sbcl using the :fd-handler swank:*communication-style*
+                     ;; (something similar might help in some other lisps, not
+                     ;; sure which though)
+                     #+(and sbcl (not sb-thread)) (restartable
+                                                   (sb-sys:serve-all-events 0))
+                     (restartable (draw current-state win))))))))))

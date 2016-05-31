@@ -59,8 +59,8 @@
            (if (> (length log) 0)
                (format t "~A reports:~%~A~%" name log)))))
   (defun get-compile-errors (shader-id shader-type shader-name)
-    (get-log #'gl:get-shader-info-log shader-id 
-             (format nil "~A shader ~A" 
+    (get-log #'gl:get-shader-info-log shader-id
+             (format nil "~A shader ~A"
                      (string-capitalize
                       (subseq shader-type 0
                               (position #\- shader-type)))
@@ -69,8 +69,9 @@
     (get-log #'gl:get-program-info-log program-id "Program")))
 
 (defmacro set-shader (program shader-type shader-path)
-  `(setf (slot-value ,program 
-                     (import ,shader-type))
+  `(setf (slot-value ,program
+                     (intern (symbol-name ,shader-type)
+                              'shader))
          ,shader-path))
 
 (defun compile-program (program)

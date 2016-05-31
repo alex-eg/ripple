@@ -9,3 +9,9 @@
 
 (defmacro make-regular-symbol (symbol-name package-name)
   `(values (intern (string-upcase ,symbol-name) ,package-name)))
+
+(defun mouse-right-p ()
+  (sdl2:mouse-state-p 3))
+
+(defun mouse-left-p ()
+  (sdl2:mouse-state-p 1))
