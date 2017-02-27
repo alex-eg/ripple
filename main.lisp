@@ -7,6 +7,9 @@
        (progn ,@body)
      (continue () :report "Continue")))
 
+(defun res (rel-path)
+  (asdf:system-relative-pathname :ripple rel-path))
+
 (defvar *rotate-matrix* (m:mat-4 (m:rotate #(0.0 1.0 1.0) 0.157)))
 (defvar *angle* 0.157)
 
@@ -73,7 +76,7 @@
     (state:add current-state :texture 'checker
                (texture:load-from-file
                 (make-instance 'texture:texture)
-                #P"./resources/textures/checker.tga"))
+                (res #P"./resources/textures/checker.tga")))
     (state:add current-state :shader 'blinn
                (make-instance 'shader:shader-program))
 
@@ -102,9 +105,9 @@
           (let ((blinn (state:get current-state :shader 'blinn))
                 (cam (state:get current-state :camera 'main)))
             (shader:set-shader blinn :fragment-shader
-                               #P"./resources/shaders/light.frag.glsl")
+                               (res #P"./resources/shaders/light.frag.glsl"))
             (shader:set-shader blinn :vertex-shader
-                               #P"./resources/shaders/light.vert.glsl")
+                               (res #P"./resources/shaders/light.vert.glsl"))
             (shader:compile-program blinn)
             (gl:use-program (shader:program-id blinn))
 
@@ -121,7 +124,7 @@
                               #(1.0 1.0 -1.0)))
 
             (obj-loader:load-mesh-from-file (state:get current-state :mesh 'suzanne)
-                                            #P"./resources/models/suzanne.obj")
+                                            (res #P"./resources/models/suzanne.obj"))
             (destructuring-bind (verts normals vert-index normal-index)
                 (procedural:hexagonal-grid 0 0 0.5 1.0)
               (obj-loader:load-mesh-from-lists (state:get current-state :mesh 'hexagon)
